@@ -1,0 +1,25 @@
+{
+  "projectName": "blueberry-ui",
+  "projectOwner": "cryptooda",
+  "repoType": "github",
+  "repoHost": "https://github.com/cryptooda/blueberry-ui",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "cryptooda",
+      "name": "cryptooda",
+      "avatar_url": "https://avatars.githubusercontent.com/u/102867384?v=4",
+      "profile": "https://github.com/CryptoOda",
+      "contributions": [
+        "code",
+        "doc",
+        "test"
+      ]
+    }
+  ]
+}

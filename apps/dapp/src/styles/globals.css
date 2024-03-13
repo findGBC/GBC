@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    margin: 0;
+    font-family: 'Poppins';
+    font-weight: 100;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1 {
+    font-weight: 900;
+  }
+  h2 {
+    font-weight: 700;
+  }
+}
+
+@layer utilities {
+  .layout {
+    @apply w-11/12 sm:w-full max-w-[86rem] mx-auto;
+  }
+  .thin {
+    @apply w-11/12 max-w-[86rem] mx-auto;
+  }
+  .small {
+    @apply sm:w-9/12;
+  }
+  .blog {
+    @apply w-11/12 md:w-8/12 xl:w-5/12;
+  }
+}
+
+
+table {
+  border-collapse:separate;
+  border-spacing:0 11px;
+  margin-top:-11px;
+}
+
+tr {
+  line-height: 4rem !important;
+  cursor: pointer;
+}
+
+td {
+  border-style:solid none;
+  padding:11px;
+}
+
+td:first-child {
+  border-left-style:solid;
+  border-top-left-radius:8px;
+  border-bottom-left-radius:8px;
+}
+
+td:last-child {
+  border-right-style:solid;
+  border-bottom-right-radius:8px;
+  border-top-right-radius:8px;
+}
+
+body, html { 
+  overflow-x:hidden; 
+  overflow-y:auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  -webkit-scrollbar: none; 
+}
+/* * { outline: 1px red solid !important; visibility: visible !important } */
+/*scrollbar-width*/
