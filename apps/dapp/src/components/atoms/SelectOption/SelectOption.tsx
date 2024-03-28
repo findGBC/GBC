@@ -1,4 +1,5 @@
-import React, { ReactNode, OptionHTMLAttributes } from 'react'
+import type { ReactNode, OptionHTMLAttributes } from 'react'
+import React from 'react'
 
 interface SelectOptionProps extends OptionHTMLAttributes<HTMLOptionElement> {
   children?: ReactNode

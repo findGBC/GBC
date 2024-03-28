@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 
-import { shortenAddress } from '../../../global/gmx-middleware/utils'
 import type { IBlueberryLadder } from '../../../global/middleware'
 import type { LeaderboardProps } from '../../../global/type'
 import { Table } from '../../mollecules'
-import DisplayBerry from '../DisplayBerry/DisplayBerry'
+import DisplayDefaultBerry from '../DisplayDefaultBerry/DisplayDefaultBerry'
+import DisplayName from '../DisplayName/DisplayName'
 
 import DisplayTraderScore from './DisplayTraderScore'
 
@@ -28,11 +27,11 @@ const LightLeaderboardTable = ({
         Cell: ({ cell }: any) => (
           <div className="flex w-full flex-row gap-4 sm:">
             <div>
-              <DisplayBerry address={cell.row.values.account} classes="w-12 rounded-full" />
+              <DisplayDefaultBerry address={cell.row.values.account} classes="w-12 rounded-full" />
             </div>
             <div className="pt-1">
               <span className="h-full leading-10 font-bold align-middle text-secondary-content text-sm">
-                {shortenAddress(cell.row.values.account)}
+                <DisplayName address={cell.row.values.account} />
               </span>
             </div>
           </div>
@@ -44,12 +43,14 @@ const LightLeaderboardTable = ({
       },
       {
         Cell: ({ cell }: any) => (
-          <DisplayTraderScore
-            score={cell.row.values.score}
-            estFeePool={metrics.estFeePool}
-            totalScore={totalScore}
-            currentMetric={currentMetric}
-          />
+          <div className="w-full">
+            <DisplayTraderScore
+              score={cell.row.values.score}
+              estFeePool={metrics.estFeePool}
+              totalScore={totalScore}
+              currentMetric={currentMetric}
+            />
+          </div>
         ),
         Header: 'Cashprize',
         accessor: 'score',
@@ -71,6 +72,9 @@ const LightLeaderboardTable = ({
       viewMoreHref="trading"
       viewMoreText="Discover GBC Trading"
       hiddenHeaderMobile={['Player']}
+      clickableRow={true}
+      rowBaseLink="/profile"
+      rowCellSubLink="account"
     />
   )
 }

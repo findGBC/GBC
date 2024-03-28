@@ -1,0 +1,56 @@
+const Trade = () => {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M5.43359 16.5V11.25"
+        stroke="white"
+        strokeWidth="1.2"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M5.43359 3.75V1.5"
+        stroke="white"
+        strokeWidth="1.2"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14.6289 16.5V14.25"
+        stroke="white"
+        strokeWidth="1.2"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14.6289 6.75V1.5"
+        stroke="white"
+        strokeWidth="1.2"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M7.94141 5.25V9.75C7.94141 10.575 7.52344 11.25 6.26953 11.25H4.59766C3.34375 11.25 2.92578 10.575 2.92578 9.75V5.25C2.92578 4.425 3.34375 3.75 4.59766 3.75H6.26953C7.52344 3.75 7.94141 4.425 7.94141 5.25Z"
+        stroke="white"
+        strokeWidth="1.2"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M17.1367 8.25V12.75C17.1367 13.575 16.7188 14.25 15.4648 14.25H13.793C12.5391 14.25 12.1211 13.575 12.1211 12.75V8.25C12.1211 7.425 12.5391 6.75 13.793 6.75H15.4648C16.7188 6.75 17.1367 7.425 17.1367 8.25Z"
+        stroke="white"
+        strokeWidth="1.2"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+export default Trade

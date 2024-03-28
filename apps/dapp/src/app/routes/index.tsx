@@ -8,6 +8,7 @@ const LaunchApp = lazy(() => import('../../pages/LaunchApp/LaunchApp'))
 const BlueberryLab = lazy(() => import('../../pages/BlueberryLab/BlueberryLab'))
 const GbcTrading = lazy(() => import('../../pages/GbcTrading/GbcTrading'))
 const Profile = lazy(() => import('../../pages/Profile/Profile'))
+const Settings = lazy(() => import('../../pages/Settings/Settings'))
 const GbcShop = lazy(() => import('../../pages/Shop/GbcShop'))
 
 const GbcRoutes = () => {
@@ -43,12 +44,22 @@ const GbcRoutes = () => {
           }
         />
       </Route>
-      <Route path="/profile" element={<LayoutMain />}>
+      <Route path="/profile/:slug" element={<LayoutMain />}>
         <Route
           index
           element={
             <Suspense fallback={null}>
               <Profile />
+            </Suspense>
+          }
+        />
+      </Route>
+      <Route path="/settings" element={<LayoutMain />}>
+        <Route
+          index
+          element={
+            <Suspense fallback={null}>
+              <Settings />
             </Suspense>
           }
         />

@@ -1,13 +1,15 @@
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import type { ReactNode } from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 import { ButtonType } from '../../../global/enum'
 import { isValidUrl } from '../../../global/helpers'
 import type { NavigationItem } from '../../../global/type'
+import useOutsideClick from '../../../hooks/useOutsideClick'
 import { Button } from '../../atoms'
 import { Logo, NavItem, Search } from '../../mollecules'
+// eslint-disable-next-line import/no-named-as-default
 import WalletConnect from '../WalletConnect/WalletConnect'
 
 import NotificationButton from './Buttons/NotificationButton'
@@ -59,7 +61,7 @@ function PrimaryNavbar() {
   )
 }
 
-function SecondaryNavbar() {
+const SecondaryNavbar = () => {
   return (
     <div className="md:flex md:mr-12 items-center hidden space-x-3">
       <Search isMobile={false}></Search>
@@ -155,11 +157,30 @@ type NavContainerProps = {
   isMenuOpen: boolean
   isSearchBarOpen: boolean
   navigation: NavigationItem[]
+  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setSearchBarOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function NavContainer({ children, isMenuOpen, isSearchBarOpen, navigation }: NavContainerProps) {
+function NavContainer({
+  children,
+  isMenuOpen,
+  isSearchBarOpen,
+  navigation,
+  setIsMenuOpen,
+  setSearchBarOpen,
+}: NavContainerProps) {
+  const navRef = useRef<HTMLDivElement>(null)
+  useOutsideClick(navRef, () => {
+    if (isMenuOpen) {
+      setIsMenuOpen(false)
+    }
+    if (isSearchBarOpen) {
+      setSearchBarOpen(false)
+    }
+  })
+
   return (
-    <nav className="bg-base-300 justify-self-center fixed w-full top-0 z-30">
+    <nav ref={navRef} className="bg-base-300 justify-self-center fixed w-full top-0 z-30">
       <div className="px-4 border-b-2 border-base-200">
         <div className="flex justify-between h-20">{children}</div>
       </div>
@@ -179,7 +200,13 @@ const NavBar = ({ navigation }: NavBarProps) => {
   const [isSearchBarOpen, setSearchBarOpen] = useState<boolean>(false)
 
   return (
-    <NavContainer isMenuOpen={isMenuOpen} isSearchBarOpen={isSearchBarOpen} navigation={navigation}>
+    <NavContainer
+      isMenuOpen={isMenuOpen}
+      isSearchBarOpen={isSearchBarOpen}
+      navigation={navigation}
+      setIsMenuOpen={setIsMenuOpen}
+      setSearchBarOpen={setSearchBarOpen}
+    >
       <PrimaryNavbar />
       <SecondaryNavbar />
       <MobileMenuButton

@@ -1,7 +1,7 @@
 import { ArrowRightIcon } from '@heroicons/react/outline'
 import { Link } from 'react-router-dom'
 
-import type { ButtonType } from '../../../global/constant'
+import type { ButtonType } from '../../../global/enum'
 import { isValidUrl } from '../../../global/helpers'
 import { useI18nContext } from '../../../i18n/i18n-react'
 import { Button } from '../../atoms'
@@ -32,13 +32,13 @@ const AppItem = ({
         <div className={`card shadow-xl m-5 ${classNames}`}>
           <div className="card-body">
             <h2 className="card-title text-2xl md:min-h-[4rem]">{title}</h2>
-            <div className=' md:min-h-[7rem]'>{children}</div>
+            <div className=" md:min-h-[7rem]">{children}</div>
             <Button btnType={btnType} className="w-max flex space-x-4">
               <div>{btnText ?? LL.SHARED.LAUNCH_APP()}</div>
               <ArrowRightIcon width={10}></ArrowRightIcon>
             </Button>
           </div>
-          <figure className='px-5'>
+          <figure className="px-5">
             <img src={img} alt={title} className="rounded-t-xl max-h-[20rem]" />
           </figure>
         </div>

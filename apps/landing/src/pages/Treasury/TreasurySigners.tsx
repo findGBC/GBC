@@ -1,7 +1,6 @@
 import TeamMember from '../../components/organism/Team/TeamMember'
 import { SignerMembers } from '../../global/constant'
 import { useI18nContext } from '../../i18n/i18n-react'
-import Team from '../Homepage/Team'
 
 const TreasurySigners: React.FC = ({}) => {
   const { LL } = useI18nContext()

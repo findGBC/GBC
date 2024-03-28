@@ -1,16 +1,14 @@
 import { JobType } from '../enum'
+import type { TeamMemberProps } from '../type'
+
+import type { IBerryDisplayTupleMap } from '.'
 import {
-  CHAIN,
   IAttributeBackground,
   IAttributeBody,
   IAttributeClothes,
   IAttributeExpression,
   IAttributeHat,
-  IBerryDisplayTupleMap,
 } from '.'
-import { ARBITRUM_ADDRESS } from './address/arbitrum'
-import { AVALANCHE_ADDRESS } from './address/avalanche'
-import type { TeamMemberProps } from '../type'
 
 export const NansenRequestInfo: RequestInit = {
   body: null,
@@ -55,10 +53,10 @@ export const Constants = {
     DISCORD: 'https://discord.com/invite/7ZMmeU3z9j',
     GBC_DOC: 'https://docs.findgbc.com/',
     GBC_FORUM: 'https://docs.findgbc.com/web3-ecosystem/governance-forum',
-    GBC_LAB: 'https://app.findgbc.com/p/lab',
+    GBC_LAB: 'https://app.findgbc.com/lab',
     GBC_OPENSEA: 'https://opensea.io/fr/collection/findgbc',
     GBC_SNAPSHOT: 'https://snapshot.org/#/gbc-nft.eth/proposal/',
-    GBC_TRADING: 'https://app.findgbc.com/p/trade',
+    GBC_TRADING: 'https://app.findgbc.com/trading',
     GITHUB: 'https://github.com/nissoh/blueberry-club',
     INSTAGRAM: 'https://www.instagram.com/findgbc',
     NANSEN: 'https://api-dev.nansen.ai/',
@@ -231,8 +229,3 @@ export const DefaultBerryAttributes: IBerryDisplayTupleMap = [
   IAttributeHat.NUDE,
   undefined,
 ]
-
-// export const TRADE_CONTRACT_MAPPING = {
-//   [CHAIN.ARBITRUM]: ARBITRUM_ADDRESS,
-//   [CHAIN.AVALANCHE]: AVALANCHE_ADDRESS,
-// }

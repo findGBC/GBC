@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 
-import { shortenAddress } from '../../../global/gmx-middleware/utils'
 import type { IBlueberryLadder } from '../../../global/middleware'
 import type { LeaderboardProps } from '../../../global/type'
 import { Table } from '../../mollecules'
-import DisplayBerry from '../DisplayBerry/DisplayBerry'
+import DisplayDefaultBerry from '../DisplayDefaultBerry/DisplayDefaultBerry'
+import DisplayName from '../DisplayName/DisplayName'
 
 import { DisplayPerformance, DisplayRoiPerformance } from './DisplayPerformance'
 import DisplayTraderScore from './DisplayTraderScore'
@@ -24,11 +24,11 @@ const LeaderboardTable = ({ traders, currentMetric, metrics, totalScore }: Leade
         Cell: ({ cell }: any) => (
           <div className="flex w-full flex-row gap-4 sm:">
             <div>
-              <DisplayBerry address={cell.row.values.account} classes="w-12 rounded-full" />
+              <DisplayDefaultBerry address={cell.row.values.account} classes="w-12 rounded-full" />
             </div>
             <div className="pt-1">
               <span className="font-bold align-middle text-secondary-content text-sm">
-                {shortenAddress(cell.row.values.account)}
+                <DisplayName address={cell.row.values.account} />
               </span>
             </div>
           </div>
@@ -98,6 +98,9 @@ const LeaderboardTable = ({ traders, currentMetric, metrics, totalScore }: Leade
       hiddenColumns={['lossCount', 'cumSize', 'maxCollateral', 'pnl']}
       showPagination={true}
       hiddenHeaderMobile={['Player']}
+      clickableRow={true}
+      rowBaseLink="/profile"
+      rowCellSubLink="account"
     />
   )
 }

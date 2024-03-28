@@ -1,9 +1,8 @@
-
 import { Animate } from '../../components/atoms'
 import PageTitle from '../../components/atoms/Title/PageTitle'
 import { Articles } from '../../components/organism'
-import { useI18nContext } from '../../i18n/i18n-react'
 import useBlog from '../../hooks/useBlog'
+import { useI18nContext } from '../../i18n/i18n-react'
 
 const Blog = () => {
   const { LL } = useI18nContext()
@@ -17,9 +16,7 @@ const Blog = () => {
         <Animate>
           <div>
             <PageTitle value={LL.BLOG.TITLE()} />
-            <Articles
-                articles={articles}
-              />
+            <Articles articles={articles} />
           </div>
         </Animate>
       </section>

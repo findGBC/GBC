@@ -17,8 +17,8 @@ const BlogPost = () => {
           return {
             body: article.body,
             mainImage: article.mainImage.asset._ref,
-            title: article.title,
             pubDate: article._createdAt,
+            title: article.title,
           } as PostProps
         })
       }),

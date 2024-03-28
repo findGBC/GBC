@@ -1,5 +1,3 @@
-import React from 'react'
-
-const Image = (props: any): JSX.Element => <img {...props} />
+const Image = (props: any): JSX.Element => <img alt={props.alt} {...props} />
 
 export default Image

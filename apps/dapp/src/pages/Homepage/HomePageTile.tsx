@@ -21,7 +21,7 @@ const HomepageTile = ({ title, href, imageUrl, text }: HomepageTileProps) => {
       </figure>
 
       <div className="card-body">
-        <div className="absolute bottom-5 z-10 text-secondary-content">
+        <div className="absolute bottom-5 z-0 text-secondary-content">
           <h1 className="text-lg font-bold">{title}</h1>
           <p className="text-sm">{text}</p>
         </div>

@@ -27,4 +27,3 @@ export const displayDate = (unixTime: number) => {
     unixTime * 1000,
   ).toLocaleTimeString()}`
 }
-

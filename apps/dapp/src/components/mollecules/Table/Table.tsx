@@ -1,12 +1,12 @@
 import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/outline'
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { useTable, usePagination, useSortBy, useFilters, useExpanded } from 'react-table'
 
+import { ButtonType } from '../../../global/enum'
 import { getKey } from '../../../global/helpers'
 import type { TableInstanceWithHooks } from '../../../global/type'
-import { Link } from 'react-router-dom'
 import { Button } from '../../atoms'
-import { ButtonType } from '../../../global/enum'
 
 export function SelectColumnFilter({
   column: { filterValue, setFilter, preFilteredRows, id },
@@ -61,6 +61,9 @@ export default function Table({
   hiddenHeaderMobile = [],
   viewMoreHref,
   viewMoreText,
+  clickableRow = false,
+  rowBaseLink,
+  rowCellSubLink,
 }: any) {
   const defaultColumn = React.useMemo<any>(
     () => ({
@@ -70,10 +73,8 @@ export default function Table({
   )
   const {
     getTableProps,
-    getTableBodyProps,
     headerGroups,
     prepareRow,
-    visibleColumns,
     page,
     canPreviousPage,
     canNextPage,
@@ -139,9 +140,20 @@ export default function Table({
           : null}
         {page.map((row: any, i) => {
           prepareRow(row)
+
+          let link = ''
+
+          if (clickableRow) {
+            const sublink = row.cells.filter((cell: any) => {
+              return cell.column.id === rowCellSubLink
+            })[0].value
+            link = clickableRow ? `${rowBaseLink}/${sublink}` : ''
+          }
+
           return (
             <>
-              <div
+              <Link
+                to={link}
                 className={
                   rowClasses +
                   ' flex-col p-4 bg-base-100 hover:bg-base-200 hover:cursor-pointer duration-300'
@@ -169,8 +181,8 @@ export default function Table({
                     </div>
                   )
                 })}
-              </div>
-              {row.isExpanded ? (
+              </Link>
+              {row.isExpanded && renderRowSubCompontent ? (
                 <div key={getKey(i.toString())}>
                   <div>{renderRowSubCompontent({ row })}</div>
                 </div>

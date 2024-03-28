@@ -35,10 +35,7 @@ const EcosystemProducts: React.FC = () => {
           </div>
 
           <div className="items-center mt-8 text-center">
-            <Button
-              btnType={ButtonType.Primary}
-              url="/ecosystem"
-            >
+            <Button btnType={ButtonType.Primary} url="/ecosystem">
               {LL.SHARED.EXPLORE()}
             </Button>
           </div>

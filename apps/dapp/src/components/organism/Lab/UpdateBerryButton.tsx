@@ -1,4 +1,3 @@
-import type { RefetchOptions, QueryObserverResult } from '@tanstack/react-query'
 import { useEffect } from 'react'
 
 import { ButtonType } from '../../../global/enum'
@@ -46,16 +45,12 @@ const UpdateBerryButton = ({
       })
       .catch((reason: any) => {
         t.update('error', reason.message)
-        console.log(reason)
       })
   }
 
   useEffect(() => {
-    // if (!isUpdated) return
-
     const unstackedItems = initialStackedLabItems.filter((item) => !stackedItems.includes(item))
     const addedItems = stackedItems.filter((item) => !initialStackedLabItems.includes(item))
-    console.log(initialStackedLabItems)
     setupUpdateBerry(selectedBerry, addedItems, unstackedItems)
   }, [selectedBerry, stackedItems, isUpdated])
 
@@ -65,7 +60,6 @@ const UpdateBerryButton = ({
     await updateBerry?.()
       .then(() => {
         t.update('success', 'Update succeed!')
-        // setupUpdateBerry(selectedBerry, [], [])
         refetchConnectedAddress()
         setInitialStackedLabItems(
           stackedItems.filter((item) => !initialStackedLabItems.includes(item)),
@@ -74,7 +68,6 @@ const UpdateBerryButton = ({
       })
       .catch((reason: any) => {
         t.update('error', reason.message)
-        console.log(reason)
       })
   }
 

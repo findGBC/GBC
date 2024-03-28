@@ -28,7 +28,8 @@ const useNansen = () => {
   useEffect(() => {
     const globalAssets: TreasuryAsset[] = []
     if (!arbAssetsData.loading && arbAssetsData.data) {
-      ;(arbAssetsData.data as TreasuryAsset[]).map((a) => {
+      // eslint-disable-next-line prettier/prettier
+      (arbAssetsData.data as TreasuryAsset[]).map((a) => {
         globalAssets.push(a)
       })
     }
@@ -37,7 +38,8 @@ const useNansen = () => {
       const data = arbStakingData?.data as StakingResponse
 
       if (data && data.staking.length >= 0) {
-        ;(data.staking[0].tokens as TreasuryAsset[]).map((a) => {
+        // eslint-disable-next-line prettier/prettier
+        (data.staking[0].tokens as TreasuryAsset[]).map((a) => {
           globalAssets.push(a)
         })
       }
@@ -47,7 +49,8 @@ const useNansen = () => {
       const data = avaxAssetsData?.data as StakingResponse
 
       if (data && data.staking?.length >= 0) {
-        ;(avaxAssetsData.data as TreasuryAsset[]).map((a) => {
+        // eslint-disable-next-line prettier/prettier
+        (avaxAssetsData.data as TreasuryAsset[]).map((a) => {
           globalAssets.push(a)
         })
       }
@@ -57,7 +60,8 @@ const useNansen = () => {
       const data = avaxStakingData?.data as StakingResponse
 
       if (data && data.staking?.length >= 0) {
-        ;(data.staking[0].tokens as TreasuryAsset[]).map((a) => {
+        // eslint-disable-next-line prettier/prettier
+        (data.staking[0].tokens as TreasuryAsset[]).map((a) => {
           globalAssets.push(a)
         })
       }

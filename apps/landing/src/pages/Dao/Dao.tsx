@@ -1,18 +1,16 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client'
 import { useEffect, useState } from 'react'
 
-import { Button } from '../../components/atoms'
 import Animate from '../../components/atoms/Animate/Animate'
 import PageTitle from '../../components/atoms/Title/PageTitle'
 import { MultiLines } from '../../components/mollecules'
 import { Constants } from '../../global/constant'
-import { ButtonType } from '../../global/enum'
 import type { ProposalProps } from '../../global/type'
+import useDocumentTitle from '../../hooks/useDocumentTitle'
 import { useI18nContext } from '../../i18n/i18n-react'
 
 import DaoProposals from './DaoProposals'
 import DaoSummary from './DaoSummary'
-import useDocumentTitle from '../../hooks/useDocumentTitle'
 
 const GET_PROPOSALS = gql`
   query Proposals(
@@ -104,7 +102,15 @@ const Treasury: React.FC = ({}) => {
             {MultiLines({ text: LL.COMMUNITY.DAO.TEXT() })}
             <br />
             <div>
-               Want in on the GBC DAO? Own a GBC NFT, hop onto our <a className='underline font-bold' href={Constants.URL.DISCORD} target='_blank'>Discord</a>, and dive into the 'Gov-Forum' channel to engage !
+              Want in on the GBC DAO? Own a GBC NFT, hop onto our{' '}
+              <a
+                className="font-bold underline"
+                href={Constants.URL.DISCORD}
+                target="_blank"
+              >
+                Discord
+              </a>
+              , and dive into the 'Gov-Forum' channel to engage !
             </div>
             <DaoSummary proposals={proposals} />
             <DaoProposals proposals={proposals} />

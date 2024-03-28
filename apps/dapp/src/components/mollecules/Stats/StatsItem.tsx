@@ -8,13 +8,7 @@ type StatsItemProps = {
   info?: string
   valueSymbol?: string
 }
-const StatsItem = ({
-  title,
-  value,
-  valueIndex,
-  info,
-  valueSymbol,
-}: StatsItemProps) => {
+const StatsItem = ({ title, value, valueIndex, info, valueSymbol }: StatsItemProps) => {
   return (
     <div className="stat">
       <div className="flex">
@@ -34,11 +28,7 @@ const StatsItem = ({
           {valueSymbol?.length ? valueSymbol + ' ' : ''}
           <CountUp end={value} duration={3}></CountUp>
         </div>
-        {valueIndex ? (
-          <div className="text-xs align-text-bottom">{valueIndex}</div>
-        ) : (
-          <></>
-        )}
+        {valueIndex ? <div className="text-xs align-text-bottom">{valueIndex}</div> : <></>}
       </div>
     </div>
   )

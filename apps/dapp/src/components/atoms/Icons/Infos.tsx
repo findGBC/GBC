@@ -1,4 +1,4 @@
-import { IconProps } from '../../../global/type'
+import type { IconProps } from '../../../global/type'
 
 interface InfosProps extends IconProps {
   tooltip: string

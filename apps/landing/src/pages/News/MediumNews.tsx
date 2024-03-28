@@ -2,16 +2,16 @@ import React from 'react'
 
 import PageTitle from '../../components/atoms/Title/PageTitle'
 import { Articles } from '../../components/organism'
+import useDocumentTitle from '../../hooks/useDocumentTitle'
 import useMediumArticles from '../../hooks/useMediumArticles'
 import { useI18nContext } from '../../i18n/i18n-react'
-import useDocumentTitle from '../../hooks/useDocumentTitle'
 
 const MediumNews: React.FC = () => {
   const { LL } = useI18nContext()
   const { articles, isLoading } = useMediumArticles()
 
   useDocumentTitle(LL.NEWS.TITLE())
-  
+
   if (isLoading && articles == null) return <div>Loading...</div>
 
   return (

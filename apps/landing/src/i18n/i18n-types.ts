@@ -240,10 +240,10 @@ type RootTranslation = {
 	}
 	TEAM: {
 		/**
-		 * {​j​o​b​|​{​*​:​ ​T​e​a​m​ ​M​e​m​b​e​r​,​ ​c​o​f​o​u​n​d​e​r​:​ ​C​o​-​F​o​u​n​d​e​r​,​ ​c​e​o​:​ ​C​E​O​,​ ​a​d​v​i​s​o​r​:​ ​A​d​v​i​s​o​r​,​ ​d​e​v​:​ ​D​e​v​e​l​o​p​e​r​,​ ​c​o​o​:​ ​C​O​O​,​ ​c​m​o​:​ ​C​M​O​,​ ​c​m​:​ ​C​o​m​m​u​n​i​t​y​ ​M​a​n​a​g​e​r​,​ ​g​m​x​:​ ​G​M​X​ ​F​o​u​n​d​e​r​}​}
-		 * @param {string | 'cofounder' | 'ceo' | 'advisor' | 'dev' | 'coo' | 'cmo' | 'cm' | 'gmx'} job
+		 * {​j​o​b​|​{​*​:​ ​T​e​a​m​ ​M​e​m​b​e​r​,​ ​c​o​f​o​u​n​d​e​r​:​ ​C​o​-​F​o​u​n​d​e​r​,​ ​c​e​o​:​ ​C​E​O​,​ ​a​d​v​i​s​o​r​:​ ​A​d​v​i​s​o​r​,​ ​d​e​v​:​ ​D​e​v​e​l​o​p​e​r​,​ ​c​o​o​:​ ​C​O​O​,​ ​c​m​o​:​ ​C​M​O​,​ ​c​m​:​ ​C​o​m​m​u​n​i​t​y​ ​M​a​n​a​g​e​r​,​ ​g​m​x​:​ ​G​M​X​ ​F​o​u​n​d​e​r​,​ ​g​i​f​:​ ​G​i​f​ ​M​a​k​e​r​}​}
+		 * @param {string | 'cofounder' | 'ceo' | 'advisor' | 'dev' | 'coo' | 'cmo' | 'cm' | 'gmx' | 'gif'} job
 		 */
-		JOB: RequiredParams<`job|{*:${string}, cofounder:${string}, ceo:${string}, advisor:${string}, dev:${string}, coo:${string}, cmo:${string}, cm:${string}, gmx:${string}}`>
+		JOB: RequiredParams<`job|{*:${string}, cofounder:${string}, ceo:${string}, advisor:${string}, dev:${string}, coo:${string}, cmo:${string}, cm:${string}, gmx:${string}, gif:${string}}`>
 		/**
 		 * W​h​i​l​e​ ​G​B​C​ ​t​h​r​i​v​e​s​ ​o​n​ ​c​o​m​m​u​n​i​t​y​-​d​r​i​v​e​n​ ​D​A​O​ ​d​e​c​i​s​i​o​n​s​,​ ​w​e​ ​h​a​v​e​ ​a​ ​d​e​d​i​c​a​t​e​d​ ​t​e​a​m​ ​f​i​n​e​-​t​u​n​i​n​g​ ​o​u​r​ ​p​r​o​j​e​c​t​'​s​ ​e​x​e​c​u​t​i​o​n​.​ ​T​h​e​y​ ​b​r​i​d​g​e​ ​t​h​e​ ​D​A​O​'​s​ ​v​i​s​i​o​n​ ​w​i​t​h​ ​t​h​e​ ​e​x​p​e​r​t​i​s​e​ ​n​e​e​d​e​d​ ​f​o​r​ ​t​a​n​g​i​b​l​e​ ​s​u​c​c​e​s​s​.​ ​M​e​e​t​ ​t​h​e​ ​m​i​n​d​s​ ​b​e​h​i​n​d​ ​t​h​e​ ​m​o​v​e​m​e​n​t​.
 		 */
@@ -508,9 +508,9 @@ export type TranslationFunctions = {
 	}
 	TEAM: {
 		/**
-		 * {job|{*: Team Member, cofounder: Co-Founder, ceo: CEO, advisor: Advisor, dev: Developer, coo: COO, cmo: CMO, cm: Community Manager, gmx: GMX Founder}}
+		 * {job|{*: Team Member, cofounder: Co-Founder, ceo: CEO, advisor: Advisor, dev: Developer, coo: COO, cmo: CMO, cm: Community Manager, gmx: GMX Founder, gif: Gif Maker}}
 		 */
-		JOB: (arg: { job: string | 'cofounder' | 'ceo' | 'advisor' | 'dev' | 'coo' | 'cmo' | 'cm' | 'gmx' }) => LocalizedString
+		JOB: (arg: { job: string | 'cofounder' | 'ceo' | 'advisor' | 'dev' | 'coo' | 'cmo' | 'cm' | 'gmx' | 'gif' }) => LocalizedString
 		/**
 		 * While GBC thrives on community-driven DAO decisions, we have a dedicated team fine-tuning our project's execution. They bridge the DAO's vision with the expertise needed for tangible success. Meet the minds behind the movement.
 		 */

@@ -4,7 +4,8 @@ Master [![Typecheck](https://github.com/CryptoOda/blueberry-ui/actions/workflows
 
 Develop [![Typecheck](https://github.com/CryptoOda/blueberry-ui/actions/workflows/typecheck.yml/badge.svg?branch=develop)](https://github.com/CryptoOda/blueberry-ui/actions/workflows/typecheck.yml) [![Build](https://github.com/CryptoOda/blueberry-ui/actions/workflows/build.yml/badge.svg?branch=develop)](https://github.com/CryptoOda/blueberry-ui/actions/workflows/build.yml) [![Lint](https://github.com/CryptoOda/blueberry-ui/actions/workflows/lint.yml/badge.svg?branch=master)](https://github.com/CryptoOda/blueberry-ui/actions/workflows/lint.yml)
 
-## [Scroll this Online!](https://blueberry-ui-sandbox.vercel.app/)
+## [Website - Scroll this Online!](https://www.findgbc.com/)
+## [Dapp - Scroll this Online!](https://app.findgbc.com/)
 
 <img src="src/assets/img/landingpage.png" />
 
@@ -59,6 +60,13 @@ npm run typesafe-i18n
 Edit [English](https://github.com/CryptoOda/blueberry-ui/blob/develop/src/i18n/en/index.ts) file
 
 More details : [Typesafe-i18n](https://github.com/ivanhofer/typesafe-i18n)
+
+### Use sanity 
+```sh
+npm install --global sanity@latest
+cd apps/landing/blog
+yarn run dev
+```
 
 # License
 

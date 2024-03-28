@@ -1,4 +1,3 @@
-import { use } from 'chai'
 import React from 'react'
 
 import useDocumentTitle from '../../hooks/useDocumentTitle'

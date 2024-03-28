@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import CountUp from 'react-countup'
 
 import treasuryIcon from '../../../assets/img/nav/wallet_icon.svg'
+import { ButtonType } from '../../../global/enum'
 import useNansen from '../../../hooks/useNansen'
 import { Button } from '../../atoms'
-import { ButtonType } from '../../../global/enum'
 
 type TreasuryButtonProps = {}
 

@@ -11,6 +11,10 @@ const fr: Translation = {
       TITLE: '',
     },
   },
+  BLOG: {
+    READ: '',
+    TITLE: '',
+  },
   COMMUNITY: {
     DAO: {
       ACTIVE_PROPOSAL: '',
@@ -23,7 +27,8 @@ const fr: Translation = {
       TOTAL_VOTES: '',
     },
     DISCUSSIONS: '',
-    STATUS: '{status|{*: pending, passed: Passed, defeat: Defeated}}',
+    STATUS:
+      '{status|{*: Pending, passed: Passed, closed: CLosed, defeated: Defeated, active: Active}}',
     TEXT: '',
     TITLE: '',
     VIEW_PROPOSAL: '',
@@ -57,6 +62,7 @@ const fr: Translation = {
     END: '',
     EXPLORE: '',
     GITHUB: '',
+    HOME: '',
     JOIN_CLUB: '',
     LAUNCH_APP: '',
     PRICE: '',
@@ -65,6 +71,11 @@ const fr: Translation = {
     SOON: '',
     START: '',
     VALUE: '',
+  },
+  TEAM: {
+    JOB: '{job|{*: Team Member, cofounder: Co-Founder, ceo: CEO, advisor: Advisor, dev: Developer, coo: COO, cmo: CMO, cm: Community Manager, gmx: GMX Founder, gif: Gif Maker}}',
+    TEXT: '',
+    TITLE: '',
   },
   TREASURY: {
     DAO: '',

@@ -5,8 +5,8 @@ import type {
   UsePaginationState,
   UseSortByInstanceProps,
 } from 'react-table'
-import { ButtonType, JobType } from './enum'
 
+import type { ButtonType, JobType } from './enum'
 
 export type TabsType = {
   label: string

@@ -8,14 +8,14 @@ import {
   useSubscription,
   useUnsubscribe,
   useWeb3InboxAccount,
-  useWeb3InboxClient,
 } from '@web3inbox/react'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { useSignMessage, useAccount } from 'wagmi'
 
 import NotificationsIcon from '../../../../assets/img/icon-image.jpg'
 import { ButtonType } from '../../../../global/enum'
-import { Button } from '../../../atoms'
+import useOutsideClick from '../../../../hooks/useOutsideClick'
+import { Button, Toast } from '../../../atoms'
 
 type NotificationPopUpProps = {
   isOpen: boolean
@@ -23,40 +23,31 @@ type NotificationPopUpProps = {
 }
 
 const NotificationPopUp = ({ isOpen, onClose }: NotificationPopUpProps) => {
-  const modalRef = useRef()
-  const { data: w3iClient, isLoading: w3iClientIsLoading } = useWeb3InboxClient()
-
-  const { data: subscription } = useSubscription()
-  const isSubscribed = Boolean(subscription)
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        onClose()
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [onClose])
+  const modalRef = useRef<HTMLDivElement>(null)
+  const { data: notifications } = useNotifications(3, false)
+  useOutsideClick(modalRef, onClose)
 
   return isOpen ? (
     <div
       ref={modalRef}
-      className="bg-opacity-10 bg-base-100 mt-[10px] lg:right-0 right-[-120px] w-[300px] absolute top-[100%]"
+      className="mt-[10px] bg-base-200 rounded-[1rem] p-5 lg:right-0 right-[-120px] w-[300px] absolute top-[100%]"
     >
-      <div className="bg-base-200 rounded-[1rem] p-5 flex flex-col items-center">
-        <main>
-          {w3iClientIsLoading ? (
-            <div>Loading W3I Client</div>
+      <h2 className="text-base-content text-lg">Notifications</h2>
+      <div className=" flex flex-col items-center pt-4">
+        {!notifications?.length ? (
+          notifications === undefined ? (
+            <span className="loading loading-spinner loading-lg"></span>
           ) : (
-            <div>
-              <div>{isSubscribed ? <Messages /> : null}</div>
+            <p className="opacity-60 text-[12px]">No notifications yet.</p>
+          )
+        ) : (
+          notifications.map(({ id, ...message }) => (
+            <div key={id} className="bg-base-300 mb-2 rounded-xl w-full p-5">
+              <h3 className="">{message.title}</h3>
+              <p className="opacity-60 text-xs">{message.body}</p>
             </div>
-          )}
-        </main>
+          ))
+        )}
       </div>
     </div>
   ) : null
@@ -70,8 +61,7 @@ type NotificationRegisterModalProps = {
 const NotificationRegisterModal = ({ showModal, address }: NotificationRegisterModalProps) => {
   const { signMessageAsync } = useSignMessage()
   const { prepareRegistration } = usePrepareRegistration()
-  const { register, isLoading: isRegistering } = useRegister()
-  // const { data: w3iClient, isLoading: w3iClientIsLoading } = useWeb3InboxClient()
+  const { register } = useRegister()
   const { isRegistered } = useWeb3InboxAccount(`eip155:1:${address}`)
 
   const { subscribe, isLoading: isSubscribing } = useSubscribe()
@@ -79,13 +69,15 @@ const NotificationRegisterModal = ({ showModal, address }: NotificationRegisterM
   const { data: subscription } = useSubscription()
   const isSubscribed = Boolean(subscription)
   const handleRegistration = async () => {
+    const t = new Toast('Registering...', 'info')
     try {
       const { message, registerParams } = await prepareRegistration()
       const signature = await signMessageAsync({ message: message })
-      await register({ registerParams, signature })
+      await register({ registerParams, signature }).then(() => {
+        t.update('success', 'Registered')
+      })
     } catch (registerIdentityError: any) {
-      // eslint-disable-next-line no-console
-      console.error(registerIdentityError)
+      t.update('error', 'Failed to register')
     }
   }
 
@@ -111,22 +103,29 @@ const NotificationRegisterModal = ({ showModal, address }: NotificationRegisterM
                 updates and new features!
               </p>
             </div>
-            {isRegistered ? null : (
+            {!isRegistered && (
               <button
                 onClick={handleRegistration}
                 disabled={isRegistered}
                 className="bg-primary rounded-[0.5rem] px-24 py-2 mt-2 w-full text-center"
               >
-                <h2 className="text-base-content">Register</h2>
+                <h2 className="text-primary-content">Register</h2>
               </button>
             )}
-            {isSubscribed && isRegistered ? null : (
+            {isRegistered && (
               <button
                 onClick={isSubscribed ? unsubscribe : subscribe}
                 disabled={isSubscribing || isUnsubscribing}
                 className="bg-primary rounded-[0.5rem] px-24 py-2 mt-2 w-full text-center"
               >
-                {isSubscribed ? null : <h2 className="">Activate</h2>}
+                {isSubscribed ? null : (
+                  <h2
+                    className="text-primary-content
+"
+                  >
+                    Activate
+                  </h2>
+                )}
               </button>
             )}
           </div>
@@ -147,6 +146,7 @@ const NotificationButton = () => {
   const { isConnected, address } = useAccount()
   const { data: subscription } = useSubscription()
   const isSubscribed = Boolean(subscription)
+  const { data: notifications } = useNotifications(3, false)
 
   initWeb3InboxClient({
     allApps: process.env.NODE_ENV !== 'production',
@@ -155,7 +155,6 @@ const NotificationButton = () => {
   })
 
   const handleOpenNotification = () => {
-    console.log(isSubscribed)
     if (isSubscribed) {
       setShowPopup(true)
       setShowRegisterModal(false)
@@ -187,9 +186,9 @@ const NotificationButton = () => {
                 <BellIcon></BellIcon>
               </div>
             </div>
-            {!showRegisterModal ? null : (
+            {notifications && notifications?.length > 0 ? (
               <div className="indicator-item indicator-bottom badge badge-primary badge-xs"></div>
-            )}
+            ) : null}
           </Button>
           <NotificationPopUp isOpen={showPopup} onClose={handleClosePopup} />
           <NotificationRegisterModal showModal={showRegisterModal} address={address!} />
@@ -200,31 +199,3 @@ const NotificationButton = () => {
 }
 
 export default NotificationButton
-
-function Messages() {
-  const { data: notifications } = useNotifications(3, false)
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      console.log(notifications);
-    }, 10000);
-    return () => clearInterval(interval);
-  }, [notifications]);
-
-  return (
-    <div className='w-full'>
-        <h2 className="text-base-content text-lg">Notifications</h2>
-        {!notifications?.length ? (
-          <span className="loading loading-spinner loading-lg"></span>
-        ) : (
-          notifications.map(({ id, ...message }) => (
-            <div key={id} className="bg-base-300 rounded-xl mb-2 px-8 py-4">
-              <h3 className="">{message.title}</h3>
-              <p className="opacity-60 text-[12px]">{message.body}</p>
-            </div>
-          ))
-        )}
-      
-    </div>
-  )
-}

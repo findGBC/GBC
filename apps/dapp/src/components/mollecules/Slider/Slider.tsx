@@ -1,5 +1,4 @@
 import { getKey } from '../../../global/helpers'
-import { Animate } from '../../atoms'
 
 type SliderProps = {
   urls: string[]
@@ -11,8 +10,7 @@ function getTrackClasses(reverse: boolean) {
 }
 
 const getImageUrl = (path: string) => {
-  return new URL(`../../../assets/img/berries/${path}.jpg`, import.meta.url)
-    .href
+  return new URL(`../../../assets/img/berries/${path}.jpg`, import.meta.url).href
 }
 
 const Slider: React.FC<SliderProps> = ({ urls, reverse }) => {
@@ -22,12 +20,7 @@ const Slider: React.FC<SliderProps> = ({ urls, reverse }) => {
         <div className={getTrackClasses(reverse)}>
           {urls.map((url) => (
             <div className="slide" key={getKey(url)}>
-              <img
-                src={getImageUrl(url)}
-                alt={url}
-                className="max-w-[12rem] md:max-w-[14rem]"
-              />
-             
+              <img src={getImageUrl(url)} alt={url} className="max-w-[12rem] md:max-w-[14rem]" />
             </div>
           ))}
         </div>

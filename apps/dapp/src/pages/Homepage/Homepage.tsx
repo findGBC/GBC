@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React from 'react'
 
 import renctangle1 from '../../assets/img/homepage/Rectangle1.jpg'
@@ -10,7 +9,7 @@ import HomepageTopPlayers from './HomepageTopPlayers'
 const Homepage: React.FC = () => {
   return (
     <>
-      <div className="layout">
+      <div className="layout animated fadeIn">
         <div className="flex flex-col w-full lg:flex-row gap-4 mb-5">
           <HomepageTile
             href="https://opensea.io/collection/findgbc"

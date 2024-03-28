@@ -2,7 +2,6 @@ import { Outlet } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 
 import { NavBar } from '../components/organism'
-
 import '../styles/app.css'
 import Footer from '../components/organism/Footer/Footer'
 

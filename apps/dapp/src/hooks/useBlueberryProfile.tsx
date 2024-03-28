@@ -4,7 +4,8 @@ import type { ILabItemOwnership, IOwner, IToken } from '../global/middleware'
 import { querySubgraph } from '../global/middleware/graph'
 
 const getProfile = async (address: string) => {
-  const res = await querySubgraph(`
+  const res = await querySubgraph(
+    `
   {
     owner(id: "${address.toLowerCase()}") {
       id
@@ -27,7 +28,9 @@ const getProfile = async (address: string) => {
       }
     }
   }
-  `)
+  `,
+    false,
+  )
   return res
 }
 const useBlueberryProfile = (address: string | `0x${string}`) => {
@@ -50,12 +53,6 @@ const useBlueberryProfile = (address: string | `0x${string}`) => {
   const refetch = async () => {
     queryClient.invalidateQueries({ queryKey: key })
     await reload()
-      .then((data) => {
-        console.log('refetch', data)
-      })
-      .catch((reason: any) => {
-        console.log(reason)
-      })
   }
 
   return {

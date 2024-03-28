@@ -13,9 +13,7 @@ const NavItem = ({ children, href, name, url, iconOnly }: INavItemProps) => {
       <Button
         btnType={href == location.pathname ? ButtonType.Accent : ButtonType.Ghost}
         url={href}
-        className={
-          'justify-start w-full px-auto z-10 ' + (disabled ? ' opacity-50 cursor-wait' : '')
-        }
+        className={'justify-start w-full px-auto z-10 ' + (disabled ? ' opacity-50' : '')}
         linkClasses="w-full"
       >
         {url ? (

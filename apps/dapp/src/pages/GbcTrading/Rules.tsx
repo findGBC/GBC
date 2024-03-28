@@ -17,7 +17,7 @@ const Rules = () => {
     abi: ReferralStorage,
     account: address,
     address: ARBITRUM_ADDRESS.ReferralStorage,
-    args: [encodeReferralCode('BLUEBERRY')],
+    args: [encodeReferralCode('BLUEBERRY') as `0x${string}`],
     functionName: 'setTraderReferralCodeByUser',
   })
 
@@ -34,9 +34,9 @@ const Rules = () => {
             To participate, trade on GMX with referral code BLUEBERRY. <br />
           </div>
           <div>
-            The competition occur every month from the 1st to the 26th. <br />
+            The competition occurs every month from the 1st to the 26th. <br />
           </div>
-          <div>Price are airdropped at the end of each competition.</div>
+          <div>Prizes are airdropped at the end of each competition.</div>
         </div>
         <div className="grid gap-3">
           <Button

@@ -113,7 +113,6 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
   if (queryParams.schedule.ended) {
     // log CSV file for airdrop
     // const nativeToken = getMappedValue(CHAIN_ADDRESS_MAP, queryParams.chain).NATIVE_TOKEN
-
     // console.log(
     //   'token_type,token_address,receiver,amount,id\n' +
     //     sortedCompetitionList
@@ -125,7 +124,6 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
     //         const ethPrice = BigInt(priceMap['_' + nativeToken])
     //         const prizeUsd = (metrics.feePool * x.score) / totalScore
     //         const tokenAmount = formatFixed(getTokenAmount(prizeUsd, ethPrice, 18), 18)
-
     //         return `erc20,${nativeToken},${x.account},${readableNumber(tokenAmount)},`
     //       })
     //       .join('\n'),
@@ -162,13 +160,18 @@ const useCompetition = (address: string | undefined) => {
     // ...params.sortBy,
     account: address || null,
     chain: CHAIN.ARBITRUM,
+    direction: 'desc',
     from,
     maxCollateral: MAX_COLLATERAL,
+
     metric: currentMetric,
+
+    offset: 0,
     // offset: params.pageIndex * 20,
     pageSize: 20,
     referralCode: BLUEBERRY_REFFERAL_CODE,
     schedule: competitionSchedule,
+    selector: 'pnl',
     to,
   }
 
@@ -176,7 +179,7 @@ const useCompetition = (address: string | undefined) => {
     queryFn: async () => {
       return await getCumulative(queryParams)
     },
-    queryKey: ['competition'],
+    queryKey: ['competition', address],
   })
 
   return {

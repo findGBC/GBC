@@ -39,8 +39,8 @@ const Button = ({
   buttonClasses.push('transition')
   buttonClasses.push('duration-300')
 
-  buttonClasses.push('hover:bg-accent-focus')
-  buttonClasses.push('hover:text-base-content')
+  buttonClasses.push('hover:bg-base-300')
+  buttonClasses.push('hover:text-secondary-content')
 
   if (border) {
     buttonClasses.push('border hover:border-base-content border-neutral')

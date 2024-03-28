@@ -7247,9 +7247,10 @@ For more details check our see discord discussions and even help us improve this
     mintRuleList: [
       {
         accountLimit: 1,
-
         //cost: parseEther('0.35').toBigInt(),
         contractAddress: '0xaA8f27dA5e73deF9ffc1CfedD90BCaD9FeA36B20',
+
+        cost: 0n,
 
         finish: toTime(2022, 10, 28, 18),
         start: toTime(2022, 9, 28, 18),
@@ -7258,11 +7259,9 @@ For more details check our see discord discussions and even help us improve this
       },
       {
         accountLimit: 1,
-
-        contractAddress: '0xA8503345A18EF77C21F5eE0Fcf587B115A4bBbe4',
-
         addressList: [],
-
+        contractAddress: '0xA8503345A18EF77C21F5eE0Fcf587B115A4bBbe4',
+        cost: 0n,
         finish: toTime(2022, 10, 28, 18),
         //cost: parseEther('0.35').toBigInt(),
         nonce: 0,
@@ -7318,9 +7317,10 @@ For more details check our see discord discussions and even help us improve this
     mintRuleList: [
       {
         accountLimit: 1,
-
         // cost: parseEther('0.05').toBigInt(),
         contractAddress: '0xCB65F3FB88887f85B0C152dBdECdabb8e1aAC82F',
+
+        cost: 0n,
 
         finish: toTime(2022, 8, 10, 18),
         start: toTime(2022, 7, 10, 18),
@@ -7337,9 +7337,10 @@ For more details check our see discord discussions and even help us improve this
     mintRuleList: [
       {
         accountLimit: 1,
-
         //cost: parseEther('0.0420').toBigInt(),
         contractAddress: '0xa90C156D2632d18F4EB20f96991609DAC5689288',
+
+        cost: 0n,
 
         finish: toTime(2022, 8, 8, 18),
         start: toTime(2022, 7, 8, 18),
@@ -7356,9 +7357,10 @@ For more details check our see discord discussions and even help us improve this
     mintRuleList: [
       {
         accountLimit: 3,
-
         // cost: parseEther('0.04').toBigInt(),
         contractAddress: '0x8CcC075E1c845FB3e0caBf04aF537171DF66b3A6',
+
+        cost: 0n,
 
         finish: toTime(2022, 7, 9, 18),
         start: toTime(2022, 6, 9, 18),
@@ -7393,9 +7395,10 @@ For more details check our see discord discussions and even help us improve this
     mintRuleList: [
       {
         accountLimit: 2,
-
         // cost: parseEther('0.03').toBigInt(),
         contractAddress: '0x1695819e85B26F31A2a89f60152C3A1151D865C1',
+
+        cost: 0n,
 
         finish: toTime(2022, 6, 22, 18),
         start: toTime(2022, 5, 22, 18),

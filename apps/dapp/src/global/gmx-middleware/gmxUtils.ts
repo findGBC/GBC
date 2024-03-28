@@ -347,14 +347,14 @@ export function toAccountSummaryList(
         avgLeverage: 0n,
         avgSize,
         cumCollateral: seed.cumCollateral + cumCollateralIncrease + cumCollateralDecrease,
-        cumulativeLeverage,
         cumSize: seed.cumSize + cumSizeIncrease + cumSizeDecrease,
-        lossCount,
+        cumulativeLeverage,
         fee,
-        openPnl,
+        lossCount,
         maxCollateral,
-        realisedPnl,
+        openPnl,
         pnl,
+        realisedPnl,
         winCount,
       }
     }, seedAccountSummary)

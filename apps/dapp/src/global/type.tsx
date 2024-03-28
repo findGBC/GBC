@@ -254,3 +254,10 @@ export type SelectOptionProps = {
 export type CategoryByGroup = {
   [key: number]: CategoryIndex[]
 }
+
+export type ProfilesQueryResult = {
+  profiles: {
+    id: string
+    username: string
+  }[]
+}

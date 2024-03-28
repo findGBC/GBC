@@ -1,9 +1,6 @@
 import {defineField, defineType} from 'sanity'
 
 export default defineType({
-  name: 'author',
-  title: 'Author',
-  type: 'document',
   fields: [
     defineField({
       name: 'name',
@@ -12,39 +9,42 @@ export default defineType({
     }),
     defineField({
       name: 'slug',
+      options: {
+        maxLength: 96,
+        source: 'name',
+      },
       title: 'Slug',
       type: 'slug',
-      options: {
-        source: 'name',
-        maxLength: 96,
-      },
     }),
     defineField({
       name: 'image',
-      title: 'Image',
-      type: 'image',
       options: {
         hotspot: true,
       },
+      title: 'Image',
+      type: 'image',
     }),
     defineField({
       name: 'bio',
-      title: 'Bio',
-      type: 'array',
       of: [
         {
+          lists: [],
+          styles: [{title: 'Normal', value: 'normal'}],
           title: 'Block',
           type: 'block',
-          styles: [{title: 'Normal', value: 'normal'}],
-          lists: [],
         },
       ],
+      title: 'Bio',
+      type: 'array',
     }),
   ],
+  name: 'author',
   preview: {
     select: {
-      title: 'name',
       media: 'image',
+      title: 'name',
     },
   },
+  title: 'Author',
+  type: 'document',
 })

@@ -22,10 +22,16 @@ const GbcTrading: React.FC = ({}) => {
   }
 
   if (leaderboard?.profile) {
+    const currentProfile = leaderboard.sortedCompetitionList.filter(
+      (trader) => trader.account == leaderboard.profile?.account.toLocaleLowerCase(),
+    )[0]
     leaderboard.sortedCompetitionList = leaderboard.sortedCompetitionList.filter(
       (trader) => trader.account !== leaderboard.profile?.account,
     )
-    leaderboard?.sortedCompetitionList?.unshift(leaderboard.profile!)
+
+    if (currentProfile) {
+      leaderboard?.sortedCompetitionList?.unshift(currentProfile)
+    }
   }
 
   return (

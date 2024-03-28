@@ -12,7 +12,7 @@ const SearchButton = ({ isOpen, onClick }: SearchButtonProps) => {
     <Button btnType={ButtonType.Ghost} className="px-3 md:block" onClick={onClick}>
       <div className="flex items-center">
         <div className="w-6 h-6">
-          <SearchIcon className={isOpen ? 'text-accent' : ''}></SearchIcon>
+          <SearchIcon className={isOpen ? 'text-primary' : ''}></SearchIcon>
         </div>
       </div>
     </Button>

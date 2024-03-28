@@ -580,9 +580,9 @@ export type IBerryDisplayTupleMap = [
   IAttributeClothes,
   IAttributeBody,
   IAttributeExpression,
-  IAttributeFaceAccessory,
+  IAttributeFaceAccessory | undefined,
   IAttributeHat,
-  IAttributeBadge,
+  IAttributeBadge | undefined,
 ]
 
 export type ILabAttributeOptions =
@@ -593,13 +593,13 @@ export type ILabAttributeOptions =
   | typeof IAttributeBadge
 
 export type SvgPartsMap = [
-  { [p in IAttributeBackground]: string },
-  { [p in IAttributeClothes]: string },
-  { [p in IAttributeBody]: string },
-  { [p in IAttributeExpression]: string },
-  { [p in IAttributeFaceAccessory]: string },
-  { [p in IAttributeHat]: string },
-  { [p in IAttributeBadge]: string },
+  { [p in IAttributeBackground | number]: string },
+  { [p in IAttributeClothes | number]: string },
+  { [p in IAttributeBody | number]: string },
+  { [p in IAttributeExpression | number]: string },
+  { [p in IAttributeFaceAccessory | number]: string },
+  { [p in IAttributeHat | number]: string },
+  { [p in IAttributeBadge | number]: string },
 ]
 
 export interface MintAccountRule {

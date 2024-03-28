@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import community from '../../../assets/img/nav/community.svg'
 import socialX from '../../../assets/img/nav/socialX.svg'
 import { isValidUrl } from '../../../global/helpers'
+import { Constants } from '../../../global/middleware/constant'
 import type { NavigationItem } from '../../../global/type'
 import { NavItem } from '../../mollecules'
 
@@ -20,7 +21,7 @@ function navItems(
   return navigation?.map((item: NavigationItem, index: number) => (
     <>
       {item.hrefs && item.hrefs.length > 0 ? (
-        <div className="collapse collapse-arrow bg-base-200">
+        <div className={"collapse collapse-arrow bg-base-200 !rounded-xl max-h-12 "}>
           <input
             type="checkbox"
             className="peer"
@@ -31,7 +32,7 @@ function navItems(
               })
             }
           />
-          <div className="rounded-t-xl leading-0 collapse-title !min-h-0 bg-base-100 peer-checked:bg-base-300 peer-checked:text-secondary-content">
+          <div className="rounded-t-xl leading-0 collapse-title !py-2 !min-h-0 bg-base-100 peer-checked:bg-base-300 peer-checked:text-secondary-content hover:bg-base-300">
             <div className="flex flex-row">
               <img src={item.url} alt={item.name} className="w-4 mr-4 ml-1 mt-1"></img>
               {isOpen ? <div className="font-semibold mt-1">{item.name}</div> : null}
@@ -82,7 +83,7 @@ function navItems(
 
 const Sidebar = ({ navigation }: SidebarProps) => {
   const [isOpen, setIsOpen] = useState(true)
-  const sidebarClass = `hidden md:block fixed top-24 mx-4 p-4 rounded-xl bg-base-200 transition-all duration-300  h-5/6 ${
+  const sidebarClass = `hidden z-20 md:block fixed top-24 mx-4 p-4 rounded-xl bg-base-200 transition-all duration-300  h-5/6 ${
     isOpen ? 'w-[265px] isOpen ' : 'w-[86px] isClosed '
   }`
 
@@ -115,7 +116,7 @@ const Sidebar = ({ navigation }: SidebarProps) => {
         <div className="flex menu-vertical gap-2 h-full justify-end z-0">
           <NavItem
             name="Contact 1"
-            href="/contact1"
+            href={Constants.URL.TWITTER}
             isMobile={false}
             url={socialX}
             iconOnly={!isOpen}
@@ -124,7 +125,7 @@ const Sidebar = ({ navigation }: SidebarProps) => {
           </NavItem>
           <NavItem
             name="Contact 2"
-            href="/contact2"
+            href={Constants.URL.DISCORD}
             isMobile={false}
             url={community}
             iconOnly={!isOpen}

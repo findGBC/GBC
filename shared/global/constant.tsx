@@ -45,10 +45,10 @@ export const Constants = {
     GBC_DOC: 'https://docs.findgbc.com/',
     GBC_FORUM:
       'https://docs.findgbc.com/web3-ecosystem/governance-forum',
-    GBC_LAB: 'https://app.findgbc.com/p/lab',
+    GBC_LAB: 'https://app.findgbc.com/lab',
     GBC_OPENSEA: 'https://opensea.io/fr/collection/findgbc',
     GBC_SNAPSHOT: 'https://snapshot.org/#/gbc-nft.eth/proposal/',
-    GBC_TRADING: 'https://app.findgbc.com/p/trade',
+    GBC_TRADING: 'https://app.findgbc.com/trading',
     GITHUB: 'https://github.com/nissoh/blueberry-club',
     INSTAGRAM: 'https://www.instagram.com/findgbc',
     NANSEN: 'https://api-dev.nansen.ai/',

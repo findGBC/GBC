@@ -1,4 +1,4 @@
-import { Constants } from "./constant"
+import { Constants } from './constant'
 
 export const isValidUrl = (urlString: string) => {
   // If the string contains localhost, it's not a valid url

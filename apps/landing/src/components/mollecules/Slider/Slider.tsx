@@ -1,5 +1,4 @@
 import { getKey } from '../../../global/helpers'
-import { Animate } from '../../atoms'
 
 type SliderProps = {
   urls: string[]
@@ -27,7 +26,6 @@ const Slider: React.FC<SliderProps> = ({ urls, reverse }) => {
                 alt={url}
                 className="max-w-[12rem] md:max-w-[14rem]"
               />
-             
             </div>
           ))}
         </div>

@@ -37,22 +37,16 @@ const useImageDownloader = (
       canvas.setAttribute('width', w.toString())
       canvas.setAttribute('height', h.toString())
       const context = canvas.getContext('2d')
-      context.drawImage(img_to_download, 0, 0, w, h)
+      context?.drawImage(img_to_download, 0, 0, w, h)
       const dataURL = canvas.toDataURL('image/png')
-      if (window.navigator.msSaveBlob) {
-        window.navigator.msSaveBlob(canvas.msToBlob(), titleSvg)
-        e.preventDefault()
-      } else {
-        const a = document.createElement('a')
-        const my_evt = new MouseEvent('click')
-        a.download = titleSvg
-        a.href = dataURL
-        a.dispatchEvent(my_evt)
-      }
+      const a = document.createElement('a')
+      const my_evt = new MouseEvent('click')
+      a.download = titleSvg
+      a.href = dataURL
+      a.dispatchEvent(my_evt)
     }
   }
 
- 
   return { triggerDownload }
 }
 export default useImageDownloader

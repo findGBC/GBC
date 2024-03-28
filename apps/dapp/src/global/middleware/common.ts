@@ -1,13 +1,8 @@
-import { map } from '@most/core'
-
 import { getMarginFees } from '../gmx-middleware/gmxUtils'
 
 import { BASIS_POINTS_DIVISOR } from './constant'
 import svgParts from './mappings/svgParts'
 import type {
-  LabItemSale,
-  MintRule,
-  SvgPartsMap,
   IBerryDisplayTupleMap,
   ICompetitionSchedule,
   ICompetitionPrize,
@@ -60,48 +55,6 @@ export const getLabItemTupleIndex = (itemId: number) => {
   }
 
   return labAttributeTuple.indexOf(attrMap)
-}
-
-export function saleMaxSupply(sale: LabItemSale): number {
-  return sale.mintRuleList.reduce((seed, next) => seed + next.supply, 0)
-}
-
-export function isSaleWithinTimeRange(rule: MintRule): boolean {
-  const { start, finish } = rule
-  const now = unixTimestampNow()
-  return now > start && now < finish
-}
-
-export function getLatestSaleRule(sale: LabItemSale): MintRule {
-  const l = sale.mintRuleList.length
-
-  if (!l) {
-    throw new Error('Sale contain no mint rules')
-  }
-
-  let match = sale.mintRuleList[0]
-
-  if (l === 1) {
-    return match
-  }
-
-  for (let index = 1; index < l; index++) {
-    const element = sale.mintRuleList[index]
-    if (element.start > match.start) {
-      match = element
-    }
-  }
-
-  return match
-}
-
-export const berrySvg = (tuple: Partial<IBerryDisplayTupleMap>) => {
-  return map((parts: SvgPartsMap) => {
-    return `<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet" fill="none" viewBox="0 0 1500 1500">${berryPartsToSvg(
-      parts,
-      tuple,
-    )}</svg>`
-  }, svgParts)
 }
 
 export const berryPartsToSvg = ([

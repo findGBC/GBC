@@ -2,13 +2,8 @@ import React from 'react'
 import { ReactSVG } from 'react-svg'
 
 import removeIcon from '../../../assets/img/icons/lab/nftItem/129.svg'
-import type { CategoryIndex } from '../../../global/enum'
-import { GetLabItemId, GetLabItemsAvailable } from '../../../global/logic/labs'
-import type {
-  IBerryDisplayTupleMap,
-  ILabItemOwnership,
-  LabItemSale,
-} from '../../../global/middleware'
+import { GetLabItemId, GetStoreItemList } from '../../../global/logic/labs'
+import type { IBerryDisplayTupleMap, ILabItemOwnership } from '../../../global/middleware'
 import { getLabItemTupleIndex, labAttributeTuple } from '../../../global/middleware'
 import type { IGroupItem } from '../../../global/type'
 import Avatar from '../Avatar/Avatar'
@@ -32,24 +27,13 @@ const AvatarItems: React.FC<AvatarItemsProps> = ({
   ownedLabItems,
   initialStackedLabItems,
 }) => {
-  const storeItemList1: LabItemSale[] = GetLabItemsAvailable(selectedGroup).sort((a, b) => {
-    const itemBalanceA =
-      ownedLabItems.filter((ownedItem) => {
-        return GetLabItemId(ownedItem.id) == a.id
-      })[0]?.balance ?? '0'
-    const itemBalanceB =
-      ownedLabItems.filter((ownedItem) => {
-        return GetLabItemId(ownedItem.id) == b.id
-      })[0]?.balance ?? '0'
-    return itemBalanceB - itemBalanceA
-  })
-
+  const shopItems = GetStoreItemList(ownedLabItems, selectedGroup)
   return (
     <div className={`grid gap-4 justify-center mt-4 text-left grid-cols-2 sm:grid-cols-4`}>
       <div className="flex flex-col h-full ">
         <button
           key="Delete"
-          className={`max-h-44 border border-base-200 text-center rounded-xl h-full flex flex-col justify-center items-center`}
+          className={`md:max-h-36 lg:max-h-max border border-base-200 text-center rounded-xl h-full flex flex-col justify-center items-center`}
           onClick={() => setDefault()}
         >
           <ReactSVG src={removeIcon} />
@@ -57,7 +41,7 @@ const AvatarItems: React.FC<AvatarItemsProps> = ({
         <div className="flex justify-center font-bold">Nothing</div>
       </div>
 
-      {storeItemList1.map((item) => {
+      {shopItems.map((item) => {
         const category = getLabItemTupleIndex(item.id)
         const localTuple = Array(labAttributeTuple.length).fill(undefined) as IBerryDisplayTupleMap
         localTuple[category] = item.id
@@ -73,21 +57,23 @@ const AvatarItems: React.FC<AvatarItemsProps> = ({
           itemBalance + (isUnstacked ? BigInt(1) : BigInt(0)) < BigInt(1) && !isSelected
 
         return (
-          <div className="flex flex-col h-full">
-            <button
-              key={item.id}
-              className={
-                `border border-base-200 rounded-xl ` +
-                (isSelected ? 'border-success  border-4 ' : '') +
-                (isDisabled ? ' filter grayscale opacity-50 ' : '')
-              }
-              onClick={() => onSelectedItem(item.id, selectedGroup.id)}
-              disabled={isDisabled}
-            >
-              <Avatar selectSvgKey={localTuple} svgTitle={item.name} classes="rounded-xl" />
-            </button>
-            <span className="flex justify-center mt-1">{item.name}</span>
-          </div>
+          <>
+            <div className="flex flex-col h-full">
+              <button
+                key={item.id}
+                className={
+                  `md:max-h-36 lg:max-h-max border border-base-200 rounded-xl ` +
+                  (isSelected ? 'border-success  border-4 ' : '') +
+                  (isDisabled ? ' filter grayscale opacity-50 ' : '')
+                }
+                onClick={() => onSelectedItem(item.id, selectedGroup.id)}
+                disabled={isDisabled}
+              >
+                <Avatar selectSvgKey={localTuple} svgTitle={item.name} classes="rounded-xl" />
+              </button>
+              <span className="flex justify-center mt-1">{item.name}</span>
+            </div>
+          </>
         )
       })}
     </div>

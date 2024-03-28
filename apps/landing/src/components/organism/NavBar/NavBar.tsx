@@ -30,7 +30,6 @@ const navigation = [
     name: 'Join the club',
     url: clubIcon,
   },
- 
 ]
 
 function navItems(isMobile = false) {
@@ -65,7 +64,7 @@ const LaunchApp = ({ className }: LaunchAppProps) => {
     <Button
       btnType={ButtonType.Primary}
       className={className}
-      url={Constants.URL.GBC_LAB}
+      url={Constants.URL.GBC_APP}
     >
       Launch app
     </Button>
@@ -159,7 +158,7 @@ type NavContainerProps = {
 
 function NavContainer({ children, isMenuOpen }: NavContainerProps) {
   return (
-    <nav className="bg-base-100 justify-self-center sticky w-full top-0 z-30">
+    <nav className="bg-base-100 justify-self-center sticky top-0 z-30 w-full">
       <div className="px-4">
         <div className="flex justify-between h-20">{children}</div>
       </div>

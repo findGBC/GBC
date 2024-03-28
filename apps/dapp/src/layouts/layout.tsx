@@ -72,7 +72,7 @@ const LayoutMain = () => {
   return (
     <>
       <NavBar navigation={navigation}></NavBar>
-      <div className="flex mt-24">
+      <div className="md:flex mt-24">
         <div className="md:w-2/12">
           <Sidebar navigation={navigation} />
         </div>

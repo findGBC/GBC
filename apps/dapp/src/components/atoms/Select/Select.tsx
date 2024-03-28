@@ -12,7 +12,7 @@ const Select: React.FC<SelectProps> = ({
   ...props
 }: SelectProps) => (
   <select
-    className={`select rounded-xl bg-base-300 select-bordered text-secondary-content w-full font-bold ${selectClassName}`}
+    className={`select rounded-xl font-bold ${selectClassName}`}
     defaultValue={defaultValue}
     onChange={onChange}
     {...props}

@@ -6,19 +6,21 @@ import { useAccount } from 'wagmi'
 
 import profileIcon from '../../assets/img/icons/lab/iconItem/profile_icon.svg'
 import openseaIcon from '../../assets/img/nav/opensea_icon.svg'
-import { Banner, Button, Select } from '../../components/atoms'
+import { Banner, Button } from '../../components/atoms'
 import { Loader } from '../../components/mollecules'
 import { Avatar, AvatarItems } from '../../components/organism'
 import LabItemGroups from '../../components/organism/Lab/LabItemGroups'
 import UpdateBerryButton from '../../components/organism/Lab/UpdateBerryButton'
+import SelectBerry from '../../components/organism/SelectBerry/SelectBerry'
 import { BannerStatus, ButtonType } from '../../global/enum'
-import { GetCategoryGroup, GetLabItemId, generateImage, generateImageSvg } from '../../global/logic/labs'
+import { GetCategoryGroup, GetLabItemId, generateImageSvg } from '../../global/logic/labs'
 import type { IBerryDisplayTupleMap, IToken } from '../../global/middleware'
 import { getLabItemTupleIndex, tokenIdAttributeTuple } from '../../global/middleware'
 import { DefaultBerryAttributes } from '../../global/middleware/constant'
-import type { IGroupItem, SelectOptionProps } from '../../global/type'
+import type { IGroupItem } from '../../global/type'
 import useBlueberryProfile from '../../hooks/useBlueberryProfile'
 import useImageDownloader from '../../hooks/useImageDownloader'
+import { useProfile } from '../../hooks/useProfile'
 import IconLabItemGroup from '../../styles/icons/iconLabItemGroup'
 
 type SelectedItemState = {
@@ -36,15 +38,31 @@ const BlueberryLab = () => {
   const [selectedGroup, setSelectedGroup] = useState<IGroupItem>(IconLabItemGroup[0])
   const [isNewUser, setIsNewUser] = useState<boolean>(true)
   const [isUpdated, setIsUpdated] = useState<boolean>(false)
+  const { userProfile } = useProfile(address as `0x${string}`)
 
   const { triggerDownload } = useImageDownloader(generateImageSvg, selectedItem, 'GBC.png')
 
   useEffect(() => {
-    if (ownedTokens && ownedTokens.length > 0) {
+    if (!userProfile) {
+      if (ownedTokens && ownedTokens.length > 0) {
+        setIsNewUser(false)
+        initBerry(ownedTokens[0])
+      }
+    } else {
       setIsNewUser(false)
-      initBerry(ownedTokens[0])
+      if (!userProfile[2] && ownedTokens && ownedTokens.length > 0) {
+        setIsNewUser(false)
+        initBerry(ownedTokens[0])
+      } else {
+        const berry = ownedTokens?.find((token) => {
+          return token.id.toString() === '0x' + BigInt(userProfile[2]).toString(16)
+        })
+        if (berry) {
+          initBerry(berry)
+        }
+      }
     }
-  }, [ownedTokens])
+  }, [userProfile, ownedTokens])
 
   useEffect(() => {
     if (!address) {
@@ -78,6 +96,8 @@ const BlueberryLab = () => {
       })
     } else {
       setSelectedItem(() => {
+        setInitialStackedLabItems([])
+        setStackedLabItems([])
         const tuple: Partial<IBerryDisplayTupleMap> = [...tokenIdAttributeTuple[token.id - 1]]
         return {
           svgKey: tuple,
@@ -138,7 +158,7 @@ const BlueberryLab = () => {
 
       return {
         svgKey: myPrevStateSvgKey,
-      }
+      } as SelectedItemState
     })
   }
 
@@ -164,24 +184,12 @@ const BlueberryLab = () => {
     }
   }
 
-  const getOptions = (tokens: IToken[] | undefined): SelectOptionProps[] => {
-    if (tokens) {
-      return tokens.map((token: IToken) => {
-        return {
-          label: `GBC #${parseInt(token.id.toString(), 16)}`,
-          value: token.id.toString(),
-        } as SelectOptionProps
-      })
-    }
-    return [] as { value: string; label: string }[]
-  }
-
   const handleDownload = () => {
     triggerDownload()
   }
 
   const handleResetSvg = () => {
-    setIsUpdated(false)
+    setIsUpdated(initialStackedLabItems.length > 0)
     setStackedLabItems((prevState) => {
       const newStack = [...prevState]
       newStack.splice(0, newStack.length)
@@ -192,7 +200,6 @@ const BlueberryLab = () => {
 
   const onSelectBerry = (value: string) => {
     initBerry(ownedTokens!.find((token) => token.id.toString() === value) as IToken)
-    setIsUpdated(true)
   }
 
   const handleOnGroupSelect = (group: IGroupItem) => {
@@ -204,8 +211,8 @@ const BlueberryLab = () => {
   }
 
   return (
-    <div className="layout small thin">
-      <div>
+    <div className="layout animated fadeIn">
+      <>
         <Banner status={BannerStatus.Info}>
           <img src={profileIcon} alt="shop icon" className="w-6 h-6 mr-5" />
           <div>
@@ -219,17 +226,19 @@ const BlueberryLab = () => {
         <div className="flex flex-col md:flex-row md:gap-10">
           <div className="md:w-2/5">
             <div className="text-center md:text-left rounded-lg">
+              {/* Display Avatar */}
               <Avatar selectSvgKey={selectedItem.svgKey} classes="rounded-xl" />
             </div>
             <div className="mt-4 text-center md:text-left">
               <div className="flex flex-col md:flex-row justify-between items-center gap-2">
                 <div className="w-full">
+                  {/* Select Avatar */}
                   {!isNewUser ? (
-                    <Select
-                      options={getOptions(ownedTokens)}
-                      selectClassName="w-full h-12"
-                      value={selectedBerry}
-                      onChange={(e) => onSelectBerry(e.target.value)}
+                    <SelectBerry
+                      ownedTokens={ownedTokens}
+                      selectedBerry={selectedBerry}
+                      onSelectBerry={onSelectBerry}
+                      className="bg-base-300 select-bordered text-secondary-content w-full"
                     />
                   ) : (
                     <Button
@@ -279,7 +288,7 @@ const BlueberryLab = () => {
             />
           </div>
         </div>
-      </div>
+      </>
     </div>
   )
 }

@@ -5,9 +5,9 @@ import { Button } from '../../components/atoms'
 import Animate from '../../components/atoms/Animate/Animate'
 import Title from '../../components/atoms/Title/Title'
 import MultiLines from '../../components/mollecules/MultiLines/MultiLines'
-import { useI18nContext } from '../../i18n/i18n-react'
 import { Constants } from '../../global/constant'
 import { ButtonType } from '../../global/enum'
+import { useI18nContext } from '../../i18n/i18n-react'
 
 const CommunityProposal: React.FC = () => {
   const { LL } = useI18nContext()

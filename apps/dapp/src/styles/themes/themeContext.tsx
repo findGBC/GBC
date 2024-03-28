@@ -56,7 +56,7 @@ export const ThemeContextProvider = ({
       setTheme: handleThemeChange,
       theme,
     }),
-    [theme]
+    [theme],
   )
 
   return <ThemeContext.Provider value={val}>{children}</ThemeContext.Provider>

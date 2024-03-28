@@ -24,15 +24,15 @@
 
 @layer utilities {
   .layout {
-    @apply w-11/12 sm:w-full max-w-[86rem] mx-auto;
+    @apply sm:w-full max-w-[86rem] w-11/12 mx-auto;
   }
   .thin {
-    @apply w-11/12 max-w-[86rem] mx-auto;
+    @apply max-w-[86rem] w-11/12 mx-auto;
   }
   .small {
     @apply sm:w-9/12;
   }
   .blog {
-    @apply w-11/12 md:w-8/12 xl:w-5/12;
+    @apply md:w-8/12 xl:w-5/12 w-11/12;
   }
 }

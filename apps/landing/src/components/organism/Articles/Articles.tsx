@@ -10,7 +10,7 @@ function getDescription(html: string) {
   const match = html.match(/<p>(.*?)<\/p>/)
   if (match) {
     return match[1].slice(0, 140)
-  }else{
+  } else {
     return html
   }
 }
