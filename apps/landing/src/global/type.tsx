@@ -29,17 +29,15 @@ export type TreasuryAsset = {
   name: string
   isNative: boolean
   price: number
-  source: string
-  isBlacklisted: boolean
-  isHidden: boolean
-  reportCount: number
   createdAt: Date
-  modifiedAt: Date
+  updatedAt: Date
   balance: number
 }
 
 export type TreasuryDetailsProps = {
-  assets: TreasuryAsset[]
+  totalValue: number;
+  arbitrumBalances: TreasuryAsset[];
+  avalancheBalances: TreasuryAsset[];
 }
 
 export type AnimateProps = {

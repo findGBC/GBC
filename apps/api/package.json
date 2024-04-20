@@ -7,6 +7,8 @@
   },
   "dependencies": {
     "axios": "^1.6.8",
+    "dayjs": "^1.11.10",
+    "firebase": "^10.11.0",
     "next": "latest",
     "pulsar_sdk_js": "^1.0.1",
     "react": "^18.2.0",

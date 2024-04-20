@@ -9,7 +9,7 @@ import { ButtonType } from '../../global/enum'
 import type { TreasuryAsset, TreasuryDetailsProps } from '../../global/type'
 import { useI18nContext } from '../../i18n/i18n-react'
 
-const TreasuryDetails: React.FC<TreasuryDetailsProps> = ({ assets }) => {
+const TreasuryDetails: React.FC<TreasuryDetailsProps> = ({ arbitrumBalances, avalancheBalances }) => {
   const { LL } = useI18nContext()
   const [rows, setRows] = useState<TreasuryAsset[]>([])
   const columns = React.useMemo(
@@ -59,8 +59,8 @@ const TreasuryDetails: React.FC<TreasuryDetailsProps> = ({ assets }) => {
   )
 
   useEffect(() => {
-    setRows(assets)
-  }, [assets])
+    setRows([...arbitrumBalances, ...avalancheBalances]);
+  }, [arbitrumBalances, avalancheBalances]);
 
   return (
     <>
