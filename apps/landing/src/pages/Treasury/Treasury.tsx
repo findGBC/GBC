@@ -1,16 +1,14 @@
 import useDocumentTitle from '../../hooks/useDocumentTitle'
-import useNansen from '../../hooks/useNansen'
 import { useI18nContext } from '../../i18n/i18n-react'
 
 import TreasuryDetails from './TreasuryDetails'
 import TreasurySigners from './TreasurySigners'
 import TreasuryStats from './TreasuryStats'
-import useTreasury from "../../hooks/useTreasury";
-import {TreasuryDetailsProps} from "../../global/type";
+import {useTreasuryDataProviderContext} from "../../providers/TreasuryDataProvider";
 
 const Treasury: React.FC = ({}) => {
   const { LL } = useI18nContext()
-  const { treasury } = useTreasury();
+  const { data } = useTreasuryDataProviderContext()
 
   useDocumentTitle(LL.TREASURY.DAO())
   return (
@@ -21,8 +19,8 @@ const Treasury: React.FC = ({}) => {
             {LL.TREASURY.DAO()}
           </div>
           <div>{LL.TREASURY.TEXT()}</div>
-          <TreasuryStats totalValue={treasury?.totalValue ?? 0} />
-          <TreasuryDetails props={treasury} />
+          <TreasuryStats/>
+          <TreasuryDetails/>
           <TreasurySigners />
         </div>
       </section>

@@ -35,9 +35,9 @@ export type TreasuryAsset = {
 }
 
 export type TreasuryDetailsProps = {
-  totalValue: number;
-  arbitrumBalances: TreasuryAsset[];
-  avalancheBalances: TreasuryAsset[];
+  totalValue: number
+  arbitrumBalances: TreasuryAsset[] | undefined
+  avalancheBalances: TreasuryAsset[] | undefined
 }
 
 export type AnimateProps = {

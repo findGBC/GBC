@@ -1,8 +1,8 @@
-import type {NextApiRequest, NextApiResponse} from "next";
-import {ChainKeys, PulsarSDK, WalletIntegration} from 'pulsar_sdk_js';
-import {initializeApp} from "firebase/app";
-import {doc, getDoc, setDoc, getFirestore} from "firebase/firestore";
-import {Asset, TreasuryDetails} from "../../../interfaces";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { ChainKeys, PulsarSDK } from 'pulsar_sdk_js';
+import { initializeApp } from "firebase/app";
+import { doc, getDoc, setDoc, getFirestore } from "firebase/firestore";
+import { Asset, TreasuryDetails } from "../../../interfaces";
 import axios from 'axios';
 import dayjs from "dayjs";
 import { getAuth, signInAnonymously } from "firebase/auth";
@@ -15,12 +15,12 @@ export default async function userHandler(
   switch (req.method) {
     case "GET":
       const firebaseConfig = {
-        apiKey: "AIzaSyDVg3bmAYvvhCI09eup8ejdln4IS8T5Q10",
-        authDomain: "gbc-cache.firebaseapp.com",
-        projectId: "gbc-cache",
-        storageBucket: "gbc-cache.appspot.com",
-        messagingSenderId: "786414618504",
-        appId: "1:786414618504:web:c868e236809a1e06341c3d"
+        apiKey: process.env.FIREBASE_API_KEY,
+        authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+        appId: process.env.FIREBASE_APP_ID
       };
 
       // Initialize Firebase
@@ -45,39 +45,7 @@ export default async function userHandler(
 
 
       const sdk = new PulsarSDK(process.env.PULSAR_API_KEY);
-    async function getWalletBalances() {
-      /*
-      * "stats": [
-            {
-                "token": {
-                    "name": "Ethereum",
-                    "denom": "ETH",
-                    "id": "6536aae7e88d67ced04b72ee",
-                    "display_id": "6536aae7e88d67ced04b72ee",
-                    "image": "https://pulsar-images.s3.eu-west-1.amazonaws.com/tokens/Ethereum.png",
-                    "latest_price": "2979.306448749154",
-                    "price_24h_change": "-58.5823819457446",
-                    "chain_properties": {
-                        "chain": "ARBITRUM",
-                        "id": {
-                            "type": "native_token",
-                            "value": "ETH"
-                        },
-                        "decimals": 18
-                    }
-                },
-                "wallet": {
-                    "address": "0xde2dbb7f1c893cc5e2f51cbfd2a73c8a016183a0",
-                    "chain": "ARBITRUM"
-                },
-                "usd_value": "186777.3179040866",
-                "balance": "62.69154285303685"
-            }
-        ],
-        "errors": []
-      * */
-
-      // [].stats.token{}
+    const getWalletBalances = async () => {
       const arbitrumBalanceResponse = sdk.balances.getWalletBalances(process.env.ARBITRUM_GBC_TREASURY_ADDRESS, ChainKeys.ARBITRUM)
 
       const arbOptions = {
@@ -104,7 +72,8 @@ export default async function userHandler(
       let arbitrumBalances: Array<Asset> = [];
       for await (const balance of arbitrumBalanceResponse) {
         if('stats' in balance) {
-          for (const stats of balance?.stats) {
+          const sortedByUsdValue = balance?.stats.sort((a, b) => Number(a.usd_value) - Number(b.usd_value));
+          for (const stats of sortedByUsdValue) {
             if("token" in stats) {
               arbitrumBalances.push({
               address: stats?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
@@ -112,16 +81,18 @@ export default async function userHandler(
               logo: stats?.token?.image,
               decimals: stats?.token?.chain_properties?.decimals ?? 0,
               chain: stats?.token?.chain_properties?.chain ?? stats?.wallet?.chain,
-              name: stats?.token?.name,
+              name: stats?.token?.name || stats?.token?.denom,
               isNative: stats?.token?.chain_properties?.id?.type === 'native_token',
               price: Number(stats?.token?.latest_price),
               createdAt: dayjs().toDate(),
               updatedAt: dayjs().toDate(),
               balance: Number(stats?.balance),
-              usdValue: Number(stats?.usd_value)
+              usdValue: Number(stats?.usd_value),
+              type: 'asset',
             });
           } else if('balances' in stats && 'integration' in stats) {
-              for(const depositBalance of stats.balances) {
+              const deposits = stats.balances.filter(balance => balance.balance_type==='DEPOSIT').sort((a, b) => Number(a.usd_value) - Number(b.usd_value));
+              for(const depositBalance of deposits) {
                 arbitrumBalances.push({
                   address: depositBalance?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
                   symbol: depositBalance?.token?.denom ?? depositBalance?.token?.chain_properties?.id?.value,
@@ -134,7 +105,8 @@ export default async function userHandler(
                   createdAt: dayjs().toDate(),
                   updatedAt: dayjs().toDate(),
                   balance: Number(depositBalance?.balance),
-                  usdValue: Number(depositBalance?.usd_value)
+                  usdValue: Number(depositBalance?.usd_value),
+                  type: 'deposit',
                 });
               }
             }
@@ -160,10 +132,12 @@ export default async function userHandler(
                 createdAt: dayjs().toDate(),
                 updatedAt: dayjs().toDate(),
                 balance: Number(stats?.balance),
-                usdValue: Number(stats?.usd_value)
+                usdValue: Number(stats?.usd_value),
+                type: 'asset',
               });
             } else if('balances' in stats && 'integration' in stats) {
-              for(const depositBalance of stats.balances) {
+              const deposits = stats.balances.filter(balance => balance.balance_type==='DEPOSIT').sort((a, b) => Number(a.usd_value) - Number(b.usd_value));
+              for(const depositBalance of deposits) {
                 avalancheBalances.push({
                   address: depositBalance?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
                   symbol: depositBalance?.token?.denom ?? depositBalance?.token?.chain_properties?.id?.value,
@@ -176,7 +150,8 @@ export default async function userHandler(
                   createdAt: dayjs().toDate(),
                   updatedAt: dayjs().toDate(),
                   balance: Number(depositBalance?.balance),
-                  usdValue: Number(depositBalance?.usd_value)
+                  usdValue: Number(depositBalance?.usd_value),
+                  type: 'deposit',
                 });
               }
             }
@@ -184,12 +159,14 @@ export default async function userHandler(
         }
       }
 
+      const sortedArbitrumBalances = arbitrumBalances.sort((a, b) => a.usdValue - b.usdValue);
+      const sortedAvalancheBalances = avalancheBalances.sort((a, b) => a.usdValue - b.usdValue);
       return {
         totalValue: +arbResponse.data.stats.current_networth + (+avalacheResponse.data.stats.current_networth),
-        arbitrumBalances,
-        avalancheBalances
+        arbitrumBalances: sortedArbitrumBalances,
+        avalancheBalances: sortedAvalancheBalances
       } as TreasuryDetails;
-    }
+    };
 
       const treasuryDetails = await getWalletBalances();
       // Get data from your dat

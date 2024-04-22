@@ -8,10 +8,12 @@ import { Constants } from '../../global/constant'
 import { ButtonType } from '../../global/enum'
 import type { TreasuryAsset, TreasuryDetailsProps } from '../../global/type'
 import { useI18nContext } from '../../i18n/i18n-react'
+import { useTreasuryDataProviderContext } from '../../providers/TreasuryDataProvider'
 
-const TreasuryDetails: React.FC<TreasuryDetailsProps> = ({ arbitrumBalances, avalancheBalances }) => {
+const TreasuryDetails = () => {
   const { LL } = useI18nContext()
   const [rows, setRows] = useState<TreasuryAsset[]>([])
+  const { data } = useTreasuryDataProviderContext()
   const columns = React.useMemo(
     () => [
       {
@@ -59,8 +61,13 @@ const TreasuryDetails: React.FC<TreasuryDetailsProps> = ({ arbitrumBalances, ava
   )
 
   useEffect(() => {
-    setRows([...arbitrumBalances, ...avalancheBalances]);
-  }, [arbitrumBalances, avalancheBalances]);
+    if (data) {
+      setRows([
+        ...(data.arbitrumBalances?.reverse() || []),
+        ...(data.avalancheBalances?.reverse() || []),
+      ])
+    }
+  }, [data])
 
   return (
     <>
@@ -81,6 +88,7 @@ const TreasuryDetails: React.FC<TreasuryDetailsProps> = ({ arbitrumBalances, ava
           columns={columns}
           data={rows.filter((r) => r.chain == 'ARBITRUM')}
           hiddenColumns={['logo']}
+          showPagination={true}
         />
       </div>
       <br />
@@ -100,8 +108,9 @@ const TreasuryDetails: React.FC<TreasuryDetailsProps> = ({ arbitrumBalances, ava
       <div className="bg-base-200 rounded-3xl md:text-base w-full p-5 mt-3 mb-3 text-xs">
         <Table
           columns={columns}
-          data={rows.filter((r) => r.chain == 'AVAX')}
+          data={rows.filter((r) => r.chain == 'AVALANCHE')}
           hiddenColumns={['logo']}
+          showPagination={true}
         />
       </div>
     </>

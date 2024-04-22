@@ -17,4 +17,5 @@ export interface Asset {
   updatedAt: Date;
   balance: number;
   usdValue: number;
+  type: string;
 }
