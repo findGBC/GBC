@@ -8,6 +8,25 @@ import dayjs from "dayjs";
 import { getAuth, signInAnonymously } from "firebase/auth";
 
 const dateFormat = "DD-MM-YYYY";
+
+const mapIntegrationRecipeIdToSymbol = (value) => {
+  switch(value) {
+    case 'GLP_STAKE_ARBITRUM':
+    case 'GLP_STAKE_AVALANCHE':
+      return 'GLP';
+    case 'GMX_STAKE_AVAX':
+      return "GMX";
+    case 'AVAX_GMX_GM_POOLS':
+      return 'Wrapped AVAX / USDC';
+    case 'GMX_STAKE_ARBITRUM':
+      return "GMX";
+    case 'ARB_GMX_GM_POOLS':
+      return "WETH / USDC";
+    default:
+      return value;
+  }
+}
+
 export default async function userHandler(
   req: NextApiRequest,
   res: NextApiResponse<TreasuryDetails>,
@@ -64,9 +83,10 @@ export default async function userHandler(
           authorization: `Bearer ${process.env.PULSAR_API_KEY}`
         }
       };
+
       const [arbResponse, avalacheResponse] = await Promise.all([
         axios.request(arbOptions),
-        axios.request(avalancheOptions)
+        axios.request(avalancheOptions),
       ]);
 
       let arbitrumBalances: Array<Asset> = [];
@@ -75,6 +95,7 @@ export default async function userHandler(
           const sortedByUsdValue = balance?.stats.sort((a, b) => Number(a.usd_value) - Number(b.usd_value));
           for (const stats of sortedByUsdValue) {
             if("token" in stats) {
+              if (Number(stats.usd_value) > 1000) {
               arbitrumBalances.push({
               address: stats?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
               symbol: stats?.token?.denom ?? stats?.token?.chain_properties?.id?.value,
@@ -90,23 +111,71 @@ export default async function userHandler(
               usdValue: Number(stats?.usd_value),
               type: 'asset',
             });
+              }
           } else if('balances' in stats && 'integration' in stats) {
               const deposits = stats.balances.filter(balance => balance.balance_type==='DEPOSIT').sort((a, b) => Number(a.usd_value) - Number(b.usd_value));
+              let depositEntry = null;
               for(const depositBalance of deposits) {
-                arbitrumBalances.push({
+                if(deposits.length === 1) {
+                  arbitrumBalances.push({
+                    address: depositBalance?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
+                    symbol: depositBalance?.token?.denom ?? depositBalance?.token?.chain_properties?.id?.value,
+                    logo: depositBalance?.token?.image,
+                    decimals: depositBalance?.token?.chain_properties?.decimals ?? 0,
+                    chain: depositBalance?.token?.chain_properties?.chain ?? depositBalance?.wallet?.chain,
+                    name: depositBalance?.token?.name,
+                    isNative: depositBalance?.token?.chain_properties?.id?.type === 'native_token',
+                    price: Number(depositBalance?.token?.latest_price),
+                    createdAt: dayjs().toDate(),
+                    updatedAt: dayjs().toDate(),
+                    balance: Number(depositBalance?.balance),
+                    usdValue: Number(depositBalance?.usd_value),
+                    type: 'deposit',
+                  });
+                  break;
+                }
+                const symbol = mapIntegrationRecipeIdToSymbol(stats?.integration?.recipe_id);
+                const usdValue = depositEntry?.usdValue ?? 0;
+                depositEntry = {
                   address: depositBalance?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
-                  symbol: depositBalance?.token?.denom ?? depositBalance?.token?.chain_properties?.id?.value,
-                  logo: depositBalance?.token?.image,
+                  symbol: symbol,
+                  logos: depositEntry?.logos ? [...depositEntry.logos ,depositBalance?.token?.image] : [depositBalance?.token?.image],
                   decimals: depositBalance?.token?.chain_properties?.decimals ?? 0,
                   chain: depositBalance?.token?.chain_properties?.chain ?? depositBalance?.wallet?.chain,
-                  name: depositBalance?.token?.name,
+                  name: symbol,
                   isNative: depositBalance?.token?.chain_properties?.id?.type === 'native_token',
                   price: Number(depositBalance?.token?.latest_price),
                   createdAt: dayjs().toDate(),
                   updatedAt: dayjs().toDate(),
-                  balance: Number(depositBalance?.balance),
-                  usdValue: Number(depositBalance?.usd_value),
+                  balance: 0,
+                  balances: depositEntry ? [...depositEntry.balances, { symbol: depositBalance?.token?.denom, balance: Number(depositBalance?.balance), usdValue: Number(depositBalance?.usd_value)}] : [{symbol: depositBalance?.token?.denom, balance: Number(depositBalance?.balance), usdValue: Number(depositBalance?.usd_value)}],
+                  usdValue: usdValue + Number(depositBalance?.usd_value),
                   type: 'deposit',
+                };
+              }
+              if(depositEntry != null) {
+                console.log(JSON.stringify(depositEntry));
+                arbitrumBalances.push(depositEntry);
+              }
+
+              const pendingRewards = stats.balances.filter(balance => balance.balance_type==='PENDING_REWARD').sort((a, b) => Number(a.usd_value) - Number(b.usd_value));
+              for(const reward of pendingRewards) {
+                const symbol = reward?.token?.denom ?? reward?.token?.chain_properties?.id?.value;
+                const usdValue = Number(reward?.usd_value);
+                arbitrumBalances.push({
+                  address: reward?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
+                  symbol: symbol,
+                  logo: reward?.token?.image,
+                  decimals: reward?.token?.chain_properties?.decimals ?? 0,
+                  chain: reward?.token?.chain_properties?.chain ?? reward?.wallet?.chain,
+                  name: reward?.token?.name,
+                  isNative: reward?.token?.chain_properties?.id?.type === 'native_token',
+                  price: Number(reward?.token?.latest_price),
+                  createdAt: dayjs().toDate(),
+                  updatedAt: dayjs().toDate(),
+                  balance: Number(reward.balance),
+                  usdValue: usdValue,
+                  type: 'reward',
                 });
               }
             }
@@ -120,40 +189,89 @@ export default async function userHandler(
         if('stats' in balance) {
           for (const stats of balance?.stats) {
             if("token" in stats) {
-              avalancheBalances.push({
-                address: stats?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
-                symbol: stats?.token?.denom ?? stats?.token?.chain_properties?.id?.value,
-                logo: stats?.token?.image,
-                decimals: stats?.token?.chain_properties?.decimals ?? 0,
-                chain: stats?.token?.chain_properties?.chain ?? stats?.wallet?.chain,
-                name: stats?.token?.name,
-                isNative: stats?.token?.chain_properties?.id?.type === 'native_token',
-                price: Number(stats?.token?.latest_price),
-                createdAt: dayjs().toDate(),
-                updatedAt: dayjs().toDate(),
-                balance: Number(stats?.balance),
-                usdValue: Number(stats?.usd_value),
-                type: 'asset',
-              });
+              if (Number(stats.usd_value) > 1000) {
+                avalancheBalances.push({
+                  address: stats?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
+                  symbol: stats?.token?.denom ?? stats?.token?.chain_properties?.id?.value,
+                  logo: stats?.token?.image,
+                  decimals: stats?.token?.chain_properties?.decimals ?? 0,
+                  chain: stats?.token?.chain_properties?.chain ?? stats?.wallet?.chain,
+                  name: stats?.token?.name,
+                  isNative: stats?.token?.chain_properties?.id?.type === 'native_token',
+                  price: Number(stats?.token?.latest_price),
+                  createdAt: dayjs().toDate(),
+                  updatedAt: dayjs().toDate(),
+                  balance: Number(stats?.balance),
+                  usdValue: Number(stats?.usd_value),
+                  type: 'asset',
+                });
+              }
             } else if('balances' in stats && 'integration' in stats) {
               const deposits = stats.balances.filter(balance => balance.balance_type==='DEPOSIT').sort((a, b) => Number(a.usd_value) - Number(b.usd_value));
+              let depositEntry = null;
               for(const depositBalance of deposits) {
-                avalancheBalances.push({
+                if(deposits.length === 1) {
+                  avalancheBalances.push({
+                    address: depositBalance?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
+                    symbol: depositBalance?.token?.denom ?? depositBalance?.token?.chain_properties?.id?.value,
+                    logo: depositBalance?.token?.image,
+                    decimals: depositBalance?.token?.chain_properties?.decimals ?? 0,
+                    chain: depositBalance?.token?.chain_properties?.chain ?? depositBalance?.wallet?.chain,
+                    name: depositBalance?.token?.name,
+                    isNative: depositBalance?.token?.chain_properties?.id?.type === 'native_token',
+                    price: Number(depositBalance?.token?.latest_price),
+                    createdAt: dayjs().toDate(),
+                    updatedAt: dayjs().toDate(),
+                    balance: Number(depositBalance?.balance),
+                    usdValue: Number(depositBalance?.usd_value),
+                    type: 'deposit',
+                  });
+                  break;
+                }
+                const symbol = mapIntegrationRecipeIdToSymbol(stats?.integration?.recipe_id);
+                const usdValue = depositEntry?.usdValue ?? 0;
+                depositEntry = {
                   address: depositBalance?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
-                  symbol: depositBalance?.token?.denom ?? depositBalance?.token?.chain_properties?.id?.value,
-                  logo: depositBalance?.token?.image,
+                  symbol: symbol,
+                  logos: depositEntry?.logos ? [...depositEntry.logos ,depositBalance?.token?.image] : [depositBalance?.token?.image],
                   decimals: depositBalance?.token?.chain_properties?.decimals ?? 0,
                   chain: depositBalance?.token?.chain_properties?.chain ?? depositBalance?.wallet?.chain,
-                  name: depositBalance?.token?.name,
+                  name: symbol,
                   isNative: depositBalance?.token?.chain_properties?.id?.type === 'native_token',
                   price: Number(depositBalance?.token?.latest_price),
                   createdAt: dayjs().toDate(),
                   updatedAt: dayjs().toDate(),
-                  balance: Number(depositBalance?.balance),
-                  usdValue: Number(depositBalance?.usd_value),
+                  balance: 0,
+                  balances: depositEntry ? [...depositEntry.balances, { symbol: depositBalance?.token?.denom, balance: Number(depositBalance?.balance), usdValue: Number(depositBalance?.usd_value)}] : [{symbol: depositBalance?.token?.denom, balance: Number(depositBalance?.balance), usdValue: Number(depositBalance?.usd_value)}],
+                  usdValue: usdValue + Number(depositBalance?.usd_value),
                   type: 'deposit',
+                };
+              }
+              if(depositEntry != null) {
+                avalancheBalances.push(depositEntry);
+              }
+
+              const pendingRewards = stats.balances.filter(balance => balance.balance_type==='PENDING_REWARD').sort((a, b) => Number(a.usd_value) - Number(b.usd_value));
+              for(const reward of pendingRewards) {
+                const symbol = reward?.token?.denom ?? reward?.token?.chain_properties?.id?.value;
+                const usdValue = Number(reward?.usd_value);
+                avalancheBalances.push({
+                  address: reward?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
+                  symbol: symbol,
+                  logo: reward?.token?.image,
+                  decimals: reward?.token?.chain_properties?.decimals ?? 0,
+                  chain: reward?.token?.chain_properties?.chain ?? reward?.wallet?.chain,
+                  name: reward?.token?.name,
+                  isNative: reward?.token?.chain_properties?.id?.type === 'native_token',
+                  price: Number(reward?.token?.latest_price),
+                  createdAt: dayjs().toDate(),
+                  updatedAt: dayjs().toDate(),
+                  balance: Number(reward.balance),
+                  usdValue: usdValue,
+                  type: 'reward',
                 });
               }
+
             }
           }
         }

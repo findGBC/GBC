@@ -37,7 +37,7 @@ const TreasuryDetails = () => {
         disableSortBy: true,
       },
       {
-        Cell: ({ cell }: any) => <>{cell.row.values.balance.toFixed(1)}</>,
+        Cell: ({ cell }: any) => <>{cell.row.values.balance ? cell.row.values.balance.toFixed(1) : null}</>,
         Header: LL.SHARED.BALANCE(),
         accessor: 'balance',
         disableFilters: true,
@@ -50,10 +50,10 @@ const TreasuryDetails = () => {
       },
       {
         Cell: ({ cell }: any) => (
-          <>$ {(cell.row.values.price * cell.row.values.balance).toFixed(1)}</>
+          <>$ { cell.row.values.usdValue.toFixed(1) }</>
         ),
         Header: LL.SHARED.VALUE(),
-        accessor: 'value',
+        accessor: 'usdValue',
         disableFilters: true,
       },
     ],
@@ -88,7 +88,7 @@ const TreasuryDetails = () => {
           columns={columns}
           data={rows.filter((r) => r.chain == 'ARBITRUM')}
           hiddenColumns={['logo']}
-          showPagination={true}
+          showPagination={rows.filter((r) => r.chain == 'ARBITRUM').length > 10}
         />
       </div>
       <br />
@@ -110,7 +110,9 @@ const TreasuryDetails = () => {
           columns={columns}
           data={rows.filter((r) => r.chain == 'AVALANCHE')}
           hiddenColumns={['logo']}
-          showPagination={true}
+          showPagination={
+            rows.filter((r) => r.chain == 'AVALANCHE').length > 10
+          }
         />
       </div>
     </>

@@ -23,7 +23,8 @@ export type TableInstanceWithHooks<T extends object> = TableInstance<T> &
 export type TreasuryAsset = {
   address: string
   symbol: string
-  logo: string
+  logo?: string
+  logos?: string[]
   decimals: number
   chain: string
   name: string
@@ -32,6 +33,8 @@ export type TreasuryAsset = {
   createdAt: Date
   updatedAt: Date
   balance: number
+  type: string
+  balances?: { symbol: string; balance: number; usdValue: number }[]
 }
 
 export type TreasuryDetailsProps = {

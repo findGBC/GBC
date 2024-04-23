@@ -7,7 +7,8 @@ export type TreasuryDetails = {
 export interface Asset {
   address: string;
   symbol: string;
-  logo: string;
+  logo?: string;
+  logos?: string[];
   decimals: number;
   chain: string,
   name: string;
@@ -18,4 +19,5 @@ export interface Asset {
   balance: number;
   usdValue: number;
   type: string;
+  balances?: { symbol: string; balance: number; usdValue: number; }[];
 }
