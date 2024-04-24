@@ -99,7 +99,7 @@ export default async function userHandler(
               arbitrumBalances.push({
               address: stats?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
               symbol: stats?.token?.denom ?? stats?.token?.chain_properties?.id?.value,
-              logo: stats?.token?.image,
+              logos: [stats?.token?.image],
               decimals: stats?.token?.chain_properties?.decimals ?? 0,
               chain: stats?.token?.chain_properties?.chain ?? stats?.wallet?.chain,
               name: stats?.token?.name || stats?.token?.denom,
@@ -120,7 +120,7 @@ export default async function userHandler(
                   arbitrumBalances.push({
                     address: depositBalance?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
                     symbol: depositBalance?.token?.denom ?? depositBalance?.token?.chain_properties?.id?.value,
-                    logo: depositBalance?.token?.image,
+                    logos:  [depositBalance?.token?.image],
                     decimals: depositBalance?.token?.chain_properties?.decimals ?? 0,
                     chain: depositBalance?.token?.chain_properties?.chain ?? depositBalance?.wallet?.chain,
                     name: depositBalance?.token?.name,
@@ -130,7 +130,7 @@ export default async function userHandler(
                     updatedAt: dayjs().toDate(),
                     balance: Number(depositBalance?.balance),
                     usdValue: Number(depositBalance?.usd_value),
-                    type: 'deposit',
+                    type: 'staking',
                   });
                   break;
                 }
@@ -150,7 +150,7 @@ export default async function userHandler(
                   balance: 0,
                   balances: depositEntry ? [...depositEntry.balances, { symbol: depositBalance?.token?.denom, balance: Number(depositBalance?.balance), usdValue: Number(depositBalance?.usd_value)}] : [{symbol: depositBalance?.token?.denom, balance: Number(depositBalance?.balance), usdValue: Number(depositBalance?.usd_value)}],
                   usdValue: usdValue + Number(depositBalance?.usd_value),
-                  type: 'deposit',
+                  type: 'staking',
                 };
               }
               if(depositEntry != null) {
@@ -165,7 +165,7 @@ export default async function userHandler(
                 arbitrumBalances.push({
                   address: reward?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
                   symbol: symbol,
-                  logo: reward?.token?.image,
+                  logos: [reward?.token?.image],
                   decimals: reward?.token?.chain_properties?.decimals ?? 0,
                   chain: reward?.token?.chain_properties?.chain ?? reward?.wallet?.chain,
                   name: reward?.token?.name,
@@ -193,7 +193,7 @@ export default async function userHandler(
                 avalancheBalances.push({
                   address: stats?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
                   symbol: stats?.token?.denom ?? stats?.token?.chain_properties?.id?.value,
-                  logo: stats?.token?.image,
+                  logos: [stats?.token?.image],
                   decimals: stats?.token?.chain_properties?.decimals ?? 0,
                   chain: stats?.token?.chain_properties?.chain ?? stats?.wallet?.chain,
                   name: stats?.token?.name,
@@ -214,7 +214,7 @@ export default async function userHandler(
                   avalancheBalances.push({
                     address: depositBalance?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
                     symbol: depositBalance?.token?.denom ?? depositBalance?.token?.chain_properties?.id?.value,
-                    logo: depositBalance?.token?.image,
+                    logos: [depositBalance?.token?.image],
                     decimals: depositBalance?.token?.chain_properties?.decimals ?? 0,
                     chain: depositBalance?.token?.chain_properties?.chain ?? depositBalance?.wallet?.chain,
                     name: depositBalance?.token?.name,
@@ -224,7 +224,7 @@ export default async function userHandler(
                     updatedAt: dayjs().toDate(),
                     balance: Number(depositBalance?.balance),
                     usdValue: Number(depositBalance?.usd_value),
-                    type: 'deposit',
+                    type: 'staking',
                   });
                   break;
                 }
@@ -244,7 +244,7 @@ export default async function userHandler(
                   balance: 0,
                   balances: depositEntry ? [...depositEntry.balances, { symbol: depositBalance?.token?.denom, balance: Number(depositBalance?.balance), usdValue: Number(depositBalance?.usd_value)}] : [{symbol: depositBalance?.token?.denom, balance: Number(depositBalance?.balance), usdValue: Number(depositBalance?.usd_value)}],
                   usdValue: usdValue + Number(depositBalance?.usd_value),
-                  type: 'deposit',
+                  type: 'staking',
                 };
               }
               if(depositEntry != null) {
@@ -258,7 +258,7 @@ export default async function userHandler(
                 avalancheBalances.push({
                   address: reward?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
                   symbol: symbol,
-                  logo: reward?.token?.image,
+                  logos: [reward?.token?.image],
                   decimals: reward?.token?.chain_properties?.decimals ?? 0,
                   chain: reward?.token?.chain_properties?.chain ?? reward?.wallet?.chain,
                   name: reward?.token?.name,

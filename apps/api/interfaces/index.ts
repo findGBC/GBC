@@ -7,7 +7,6 @@ export type TreasuryDetails = {
 export interface Asset {
   address: string;
   symbol: string;
-  logo?: string;
   logos?: string[];
   decimals: number;
   chain: string,
