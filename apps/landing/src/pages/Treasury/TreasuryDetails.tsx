@@ -11,6 +11,7 @@ import { ButtonType } from '../../global/enum'
 import type { TreasuryAsset } from '../../global/type'
 import { useI18nContext } from '../../i18n/i18n-react'
 import { useTreasuryDataProviderContext } from '../../providers/TreasuryDataProvider'
+const nFormat = new Intl.NumberFormat()
 
 const TreasuryDetails = () => {
   const { LL } = useI18nContext()
@@ -100,7 +101,7 @@ const TreasuryDetails = () => {
         Cell: ({ cell }: any) => (
           <>
             {cell.row.values.balance
-              ? cell.row.values.balance.toFixed(1)
+              ? nFormat.format(cell.row.values.balance.toFixed(2))
               : 'staking'}
           </>
         ),
@@ -109,7 +110,7 @@ const TreasuryDetails = () => {
         disableFilters: true,
       },
       {
-        Cell: ({ cell }: any) => <>$ {cell.row.values.price.toFixed(1)}</>,
+        Cell: ({ cell }: any) => <>$ {nFormat.format(cell.row.values.price.toFixed(2))}</>,
         Header: LL.SHARED.PRICE(),
         accessor: 'price',
         disableFilters: true,
@@ -122,7 +123,7 @@ const TreasuryDetails = () => {
         disableSortBy: true,
       },
       {
-        Cell: ({ cell }: any) => <>$ {cell.row.values.usdValue.toFixed(1)}</>,
+        Cell: ({ cell }: any) => <>$ {nFormat.format(cell.row.values.usdValue.toFixed(2))}</>,
         Header: LL.SHARED.VALUE(),
         accessor: 'usdValue',
         disableFilters: true,

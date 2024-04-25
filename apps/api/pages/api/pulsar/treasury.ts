@@ -61,8 +61,6 @@ export default async function userHandler(
         return res.status(200).json(result);
       }
 
-
-
       const sdk = new PulsarSDK(process.env.PULSAR_API_KEY);
     const getWalletBalances = async () => {
       const arbitrumBalanceResponse = sdk.balances.getWalletBalances(process.env.ARBITRUM_GBC_TREASURY_ADDRESS, ChainKeys.ARBITRUM)
@@ -75,6 +73,7 @@ export default async function userHandler(
           authorization: `Bearer ${process.env.PULSAR_API_KEY}`
         }
       };
+
       const avalancheOptions = {
         method: 'GET',
         url: `https://qa-api.pulsar.finance/v1/thirdparty/wallet/${process.env.AVALANCHE_GBC_TREASURY_ADDRESS}/timeseries?chain=${ChainKeys.AVALANCHE}&tier=1d`,
@@ -88,6 +87,7 @@ export default async function userHandler(
         axios.request(arbOptions),
         axios.request(avalancheOptions),
       ]);
+
 
       let arbitrumBalances: Array<Asset> = [];
       for await (const balance of arbitrumBalanceResponse) {
@@ -117,6 +117,42 @@ export default async function userHandler(
               let depositEntry = null;
               for(const depositBalance of deposits) {
                 if(deposits.length === 1) {
+
+                  if((depositBalance?.token?.denom ?? depositBalance?.token?.chain_properties?.id?.value) === 'GMX') {
+                    arbitrumBalances.push({
+                      address: depositBalance?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
+                      symbol: depositBalance?.token?.denom ?? depositBalance?.token?.chain_properties?.id?.value,
+                      logos:  [depositBalance?.token?.image],
+                      decimals: depositBalance?.token?.chain_properties?.decimals ?? 0,
+                      chain: depositBalance?.token?.chain_properties?.chain ?? depositBalance?.wallet?.chain,
+                      name: depositBalance?.token?.name,
+                      isNative: depositBalance?.token?.chain_properties?.id?.type === 'native_token',
+                      price: Number(depositBalance?.token?.latest_price),
+                      createdAt: dayjs().toDate(),
+                      updatedAt: dayjs().toDate(),
+                      balance: Number(depositBalance?.balance) - Number(process.env.ARBITRUM_TREASURY_ESGMX_BALANCE),
+                      usdValue: Number(depositBalance?.usd_value) - (Number(process.env.ARBITRUM_TREASURY_ESGMX_BALANCE) * Number(depositBalance?.token?.latest_price)),
+                      type: 'staking',
+                    });
+
+                    arbitrumBalances.push({
+                      address: depositBalance?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
+                      symbol: 'esGMX',
+                      logos:  [depositBalance?.token?.image],
+                      decimals: depositBalance?.token?.chain_properties?.decimals ?? 0,
+                      chain: depositBalance?.token?.chain_properties?.chain ?? depositBalance?.wallet?.chain,
+                      name: 'esGMX',
+                      isNative: depositBalance?.token?.chain_properties?.id?.type === 'native_token',
+                      price: Number(depositBalance?.token?.latest_price),
+                      createdAt: dayjs().toDate(),
+                      updatedAt: dayjs().toDate(),
+                      balance: Number(process.env.ARBITRUM_TREASURY_ESGMX_BALANCE),
+                      usdValue: Number(process.env.ARBITRUM_TREASURY_ESGMX_BALANCE) * Number(depositBalance?.token?.latest_price),
+                      type: 'staking',
+                    });
+                    continue;
+                  }
+
                   arbitrumBalances.push({
                     address: depositBalance?.wallet?.address ?? process.env.ARBITRUM_GBC_TREASURY_ADDRESS,
                     symbol: depositBalance?.token?.denom ?? depositBalance?.token?.chain_properties?.id?.value,
