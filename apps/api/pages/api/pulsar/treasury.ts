@@ -47,16 +47,13 @@ export default async function userHandler(
       const db = getFirestore(app);
 
       const dataSnapshot = await getDoc(doc(db, 'data', `balance-${dayjs().format(dateFormat)}`));
-      const data = dataSnapshot.data();
-
-
-      console.log(data);
+      const data = dataSnapshot.data() as TreasuryDetails;
 
       if(data) {
         const result = {
-          ...data,
-          arbitrumBalances: data.arbitrumBalances?.map(asset => {return { ...asset, createdAt: asset.createdAt?.toDate() || null, updatedAt: asset.updatedAt?.toDate() || null};}) || [],
-          avalancheBalances: data.avalancheBalances?.map(asset => {return { ...asset, createdAt: asset.createdAt?.toDate() || null, updatedAt: asset.updatedAt?.toDate() || null};}) || [],
+          totalValue: data.totalValue,
+          arbitrumBalances: data.arbitrumBalances?.map(asset => {return { ...asset, createdAt: (asset.createdAt as Date)?.toISOString() || null, updatedAt: (asset.updatedAt as Date)?.toISOString() || null};}) || [],
+          avalancheBalances: data.avalancheBalances?.map(asset => {return { ...asset, createdAt: (asset.createdAt as Date)?.toISOString() || null, updatedAt: (asset.updatedAt as Date)?.toISOString() || null};}) || [],
         }
         return res.status(200).json(result);
       }
