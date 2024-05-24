@@ -6,7 +6,7 @@ import { CHAIN } from '../middleware'
 
 import { TOKEN_SYMBOL } from './address/symbol'
 import { intervalTimeMap } from './constant'
-import { getTokenDescription } from './gmxUtils'
+import { getTokenDescription, toAccountSummaryListV2 } from './gmxUtils'
 import type {
   IRequestAccountApi,
   IChainParamApi,
@@ -18,6 +18,7 @@ import type {
   IRequestPageApi,
   ITrade,
   IPriceLatest,
+  ITradeV2,
 } from './types'
 import {
   createSubgraphClient,
@@ -39,7 +40,13 @@ export const ensGraph = createSubgraphClient({
 export const arbitrumGraph = createSubgraphClient({
   exchanges: [cacheExchange, fetchExchange],
   fetch: fetch as any,
-  url: 'https://api.thegraph.com/subgraphs/name/nissoh/gmx-arbitrum',
+  url: 'https://api.thegraph.com/subgraphs/name/nissoh/gmx-arbitrum', //https://api.studio.thegraph.com/query/36314/gmx-blueberry-club/version/latest; https://api.thegraph.com/subgraphs/name/nissoh/gmx-arbitrum
+})
+
+export const arbitrumGraphV2 = createSubgraphClient({
+  exchanges: [cacheExchange, fetchExchange],
+  fetch: fetch as any,
+  url: 'https://api.studio.thegraph.com/query/36314/gmx-blueberry-club/version/latest',
 })
 
 export const arbitrumGraphDev = createSubgraphClient({
@@ -67,6 +74,7 @@ export const subgraphDevChainMap: { [p in CHAIN]: typeof arbitrumGraph } = {
 export const subgraphChainMap: { [p in CHAIN]: typeof arbitrumGraph } = {
   [CHAIN.ARBITRUM]: arbitrumGraph,
   [CHAIN.AVALANCHE]: avalancheGraph,
+  [2]: arbitrumGraphV2,
 } as any
 
 const gmxIoPricefeedIntervalLabel = {
@@ -314,16 +322,15 @@ export async function getCompetitionTrades(
     async (params) => {
       const res = await subgraphChainMap[queryParams.chain](
         gql(`
-
-query {
-  trades(first: 1000, skip: ${params.offset}, where: { entryReferralCode: "${queryParams.referralCode}", timestamp_gte: ${params.from}, timestamp_lt: ${params.to}}) {
-  # trades(first: 1000, skip: ${params.offset}, where: { timestamp_gte: ${params.from}, timestamp_lt: ${params.to}}) {
-      ${tradeFields}
-      entryReferralCode
-      entryReferrer
-  }
-}
-`),
+        query {
+            trades(first: 1000, skip: ${params.offset}, where: { entryReferralCode: "${queryParams.referralCode}", timestamp_gte: ${params.from}, timestamp_lt: ${params.to}}) {
+            # trades(first: 1000, skip: ${params.offset}, where: { timestamp_gte: ${params.from}, timestamp_lt: ${params.to}}) {
+                ${tradeFields}
+                entryReferralCode
+                entryReferrer
+                }
+            }
+        `),
         {},
       )
 
@@ -331,6 +338,75 @@ query {
     },
     newLocal,
   )
+  try {
+    const referralAccountsRes = await arbitrumGraphV2(
+      gql(`
+            query {
+ 	referralAccounts(where: {code: "0x424c554542455252590000000000000000000000000000000000000000000000"}) {
+ 	  id
+ 	}
+}
+        `),
+      {},
+    )
+    const refIds = referralAccountsRes.referralAccounts.map((ref: any) => `"${ref.id}"`)
+    const idsString = refIds.join(', ')
+    const orderCreators = await arbitrumGraphV2(
+      gql(`
+        query {
+          orderCreateds(where: {account_in: [${idsString}]}) {
+             account
+             isLong
+             key
+             executionFee
+             initialCollateralToken
+             acceptablePrice
+            }
+          }`),
+      {},
+    )
+
+    const positionsOpened = await arbitrumGraphV2(
+      gql(`
+        query {
+          positionOpens(where: {account_in: [${idsString}]}) {
+              id
+              key
+              link
+              account
+              market
+              collateralToken
+              indexToken
+              sizeInUsd
+              sizeInTokens
+              collateralAmount
+              realisedPnlUsd
+              referralAccount
+              referralMember
+              cumulativeSizeUsd
+              cumulativeSizeToken
+              cumulativeCollateralUsd
+              cumulativeCollateralToken
+              maxSizeUsd
+              maxSizeToken
+              maxCollateralUsd
+              maxCollateralToken
+              isLong
+              blockNumber
+              blockTimestamp
+              transactionHash
+              logIndex
+            }
+          }`),
+      {},
+    )
+
+    const positionsOpenedList: ITradeV2[] = positionsOpened.positionOpens.map(fromJson.tradeJsonV2)
+    toAccountSummaryListV2(positionsOpenedList)
+    //console.log({ positionsOpened, positionsOpenedList })
+  } catch (e) {
+    console.log({ e })
+  }
 
   const historicTradeList = await competitionAccountListQuery
   const tradeList: ITrade[] = historicTradeList.map(fromJson.tradeJson)
@@ -340,10 +416,6 @@ query {
 const increasePositionFields = `
   id
   timestamp
-  account
-  collateralToken
-  indexToken
-  isLong
   key
   collateralDelta
   sizeDelta
@@ -353,10 +425,6 @@ const increasePositionFields = `
 const decreasePositionFields = `
   id
   timestamp
-  account
-  collateralToken
-  indexToken
-  isLong
   key
   collateralDelta
   sizeDelta
@@ -373,7 +441,6 @@ const updatePositionFields = `
   reserveAmount
   realisedPnl
   averagePrice
-  entryFundingRate
 `
 const closePositionFields = `
   id
@@ -405,7 +472,6 @@ const tradeFields = `
   id
   timestamp
   account
-  collateralToken
   indexToken
   isLong
   key
@@ -414,20 +480,109 @@ const tradeFields = `
   increaseList(first: 1000) { ${increasePositionFields} }
   decreaseList(first: 1000) { ${decreasePositionFields} }
   updateList(first: 1000) { ${updatePositionFields} }
-
-  sizeDelta
-  collateralDelta
   fee
-  size
   collateral
   averagePrice
-
-  entryReferralCode
-  entryReferrer
-
   realisedPnl
-  realisedPnlPercentage
-  settledTimestamp
   closedPosition { ${closePositionFields} }
   liquidatedPosition { ${liquidatePositionFields} }
 `
+
+/*
+
+
+query {
+  trades(
+      first: 1000
+  skip: 0
+  where: {
+    entryReferralCode: "0x424c554542455252590000000000000000000000000000000000000000000000"
+    timestamp_gte: 1714521600
+    timestamp_lt: 1714570625
+  }
+) {
+    id // +- (id from orderCreators)?
+    timestamp
+    account // ++
+    indexToken
+    isLong // ++
+    key // ++
+    status //+
+    fee // +- executionFee (orderCreated)?
+    collateral // there is something, but not relevant
+    averagePrice +- acceptablePrice (orderCreated)
+    realisedPnl // +- from positionOpen
+    increaseList(first: 1000) {
+      id // ++
+      timestamp // ++ blockTimestamp
+      account // ++
+      collateralToken // ++
+      indexToken //
+      isLong
+      key
+      collateralDelta
+      sizeDelta
+      fee
+      price
+      __typename
+    }
+    decreaseList(first: 1000) {
+      id
+      timestamp
+      account
+      collateralToken
+      indexToken
+      isLong
+      key
+      collateralDelta
+      sizeDelta
+      fee
+      price
+      __typename
+    }
+    updateList(first: 1000) {
+      id
+      timestamp
+      key
+      size
+      markPrice
+      collateral
+      reserveAmount
+      realisedPnl
+      averagePrice
+      entryFundingRate
+      __typename
+    }
+    closedPosition {
+      id
+      timestamp
+      key
+      size
+      collateral
+      reserveAmount
+      realisedPnl
+      averagePrice
+      entryFundingRate
+      __typename
+    }
+    liquidatedPosition {
+      id
+      timestamp
+      key
+      account
+      collateralToken
+      indexToken
+      isLong
+      size
+      collateral
+      reserveAmount
+      realisedPnl
+      markPrice
+      __typename
+    }
+    entryReferralCode
+    entryReferrer
+    __typename
+  }
+}
+*/

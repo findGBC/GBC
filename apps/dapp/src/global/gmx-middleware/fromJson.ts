@@ -12,6 +12,7 @@ import type {
   IPriceLatest,
   IStake,
   ITokenPricefeed,
+  ITradeV2,
 } from './types'
 
 export function baseEntityJson<T extends IIdentifiableEntity>(json: T): T {
@@ -21,11 +22,10 @@ export function baseEntityJson<T extends IIdentifiableEntity>(json: T): T {
 export function positonCloseJson(json: IPositionClose): IPositionClose {
   const realisedPnl = BigInt(json.realisedPnl)
   const collateral = BigInt(json.collateral)
-  const entryFundingRate = BigInt(json.entryFundingRate)
   const averagePrice = BigInt(json.averagePrice)
   const size = BigInt(json.size)
 
-  return { ...baseEntityJson(json), averagePrice, collateral, entryFundingRate, realisedPnl, size }
+  return { ...baseEntityJson(json), averagePrice, collateral, realisedPnl, size }
 }
 
 export function positionLiquidatedJson(json: IPositionLiquidated): IPositionLiquidated {
@@ -80,7 +80,6 @@ export function positionUpdateJson(json: IPositionUpdate): IPositionUpdate {
   const averagePrice = BigInt(json.averagePrice)
   const size = BigInt(json.size)
   const markPrice = BigInt(json.markPrice)
-  const entryFundingRate = BigInt(json.entryFundingRate)
   const realisedPnl = BigInt(json.realisedPnl)
   const reserveAmount = BigInt(json.reserveAmount)
 
@@ -88,7 +87,6 @@ export function positionUpdateJson(json: IPositionUpdate): IPositionUpdate {
     ...json,
     averagePrice,
     collateral,
-    entryFundingRate,
     markPrice,
     realisedPnl,
     reserveAmount,
@@ -129,8 +127,41 @@ export function tradeJson<T extends ITrade>(json: T): T {
 
     liquidatedPosition,
     realisedPnl,
-    size: BigInt(json.size),
+    //size: BigInt(json.size),
     updateList,
+  }
+}
+
+export function tradeJsonV2<T extends ITradeV2>(json: T): T {
+  const realisedPnlUsd = BigInt(json.realisedPnlUsd)
+  const sizeInUsd = BigInt(json.sizeInUsd)
+  const sizeInTokens = BigInt(json.sizeInTokens)
+  const collateralAmount = BigInt(json.collateralAmount)
+  const referralMember = BigInt(json.referralMember)
+  const cumulativeSizeUsd = BigInt(json.cumulativeSizeUsd)
+  const cumulativeSizeToken = BigInt(json.cumulativeSizeToken)
+  const cumulativeCollateralUsd = BigInt(json.cumulativeCollateralUsd)
+  const cumulativeCollateralToken = BigInt(json.cumulativeCollateralToken)
+  const maxSizeUsd = BigInt(json.maxSizeUsd)
+  const maxSizeToken = BigInt(json.maxSizeToken)
+  const maxCollateralUsd = BigInt(json.maxCollateralUsd)
+  const maxCollateralToken = BigInt(json.maxCollateralToken)
+
+  return {
+    ...json,
+    collateralAmount,
+    cumulativeCollateralToken,
+    cumulativeCollateralUsd,
+    cumulativeSizeToken,
+    cumulativeSizeUsd,
+    maxCollateralToken,
+    maxCollateralUsd,
+    maxSizeToken,
+    maxSizeUsd,
+    realisedPnlUsd,
+    referralMember,
+    sizeInTokens,
+    sizeInUsd,
   }
 }
 

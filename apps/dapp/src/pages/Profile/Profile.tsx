@@ -60,7 +60,6 @@ const Profile: React.FC = ({}) => {
   const { currentProfile, getInfoKeyValue } = useProfile(currentAddress as `0x${string}`)
   const { isLoading, ownedTokens, ownedLabItems } = useBlueberryProfile(currentAddress)
   const { isLoading: tradingStatsLoading, leaderboard } = useCompetition(currentAddress)
-
   const timestampToDate = (_timestamp: string) => {
     const timestamp = Number(_timestamp) * 1000
     const date = new Date(timestamp)

@@ -234,6 +234,40 @@ export type ITradeLiquidated = ITradeAbstract<TradeStatus.LIQUIDATED> & {
 }
 export type ITradeSettled = ITradeClosed | ITradeLiquidated
 export type ITrade = ITradeSettled | ITradeOpen
+export type ITradeV2 = {
+  id: string
+  key: string
+  link: string
+  account: string
+  market: string
+  collateralToken: string
+  indexToken: string
+  transactionHash: string
+  blockNumber: string
+  blockTimestamp: string
+  sizeInUsd: bigint
+  sizeInTokens: bigint
+  collateralAmount: bigint
+  realisedPnlUsd: bigint
+  referralMember: boolean
+  cumulativeSizeUsd: bigint
+  cumulativeSizeToken: bigint
+  cumulativeCollateralUsd: bigint
+  cumulativeCollateralToken: bigint
+  maxSizeUsd: bigint
+  maxSizeToken: bigint
+  maxCollateralUsd: bigint
+  maxCollateralToken: bigint
+  isLong: boolean
+  logIndex: bigint
+  referralAccount?: {
+    id: string
+    code: string
+    blockNumber: bigint
+    blockTimestamp: bigint
+    transactionHash: string
+  }
+}
 
 export interface IStake extends IndexedType<'Stake'> {
   id: string
