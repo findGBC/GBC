@@ -13,8 +13,8 @@ export interface Asset {
   name: string;
   isNative: boolean;
   price: number;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  createdAt: Date | string | null;
+  updatedAt: Date | string | null;
   balance: number;
   usdValue: number;
   type: string;
