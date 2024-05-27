@@ -52,8 +52,8 @@ export default async function userHandler(
       if(data) {
         const result = {
           totalValue: data.totalValue,
-          arbitrumBalances: data.arbitrumBalances?.map(asset => { return { ...asset, createdAt: dayjs.unix(asset.createdAt).toISOString() || null, updatedAt: dayjs.unix(asset.updatedAt).toISOString() || null };}) || [],
-          avalancheBalances: data.avalancheBalances?.map(asset => {return { ...asset, createdAt: dayjs.unix(asset.createdAt).toISOString() || null, updatedAt: dayjs.unix(asset.updatedAt).toISOString() || null };}) || [],
+          arbitrumBalances: data.arbitrumBalances?.map(asset => { return { ...asset, createdAt:  null, updatedAt: null };}) || [],
+          avalancheBalances: data.avalancheBalances?.map(asset => {return { ...asset, createdAt:  null, updatedAt: null };}) || [],
         }
         return res.status(200).json(result);
       }
