@@ -296,6 +296,13 @@ export interface IAccountSummary {
   cumulativeLeverage: bigint
 }
 
+export interface IAccountSummaryV2 {
+  realisedPnlInUsd: bigint
+  account: string
+  winCount: number
+  lossCount: number
+}
+
 export interface IPriceTimeline {
   id: string
   value: bigint

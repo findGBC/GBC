@@ -8,6 +8,7 @@ import type {
   IPositionLiquidated,
   ITokenDescription,
   ITradeV2,
+  IAccountSummaryV2,
 } from './types'
 import { TradeStatus } from './types'
 import { easeInExpo, formatFixed, getSafeMappedValue, groupByMapMany } from './utils'
@@ -56,10 +57,28 @@ export function isTradeClosed(trade: ITrade): trade is ITradeClosed {
 export function toAccountSummaryListV2(list: ITradeV2[]) {
   const tradeListMap = groupByMapMany(list, (a) => a.account)
   const tradeListEntries = Object.entries(tradeListMap)
-  console.log({ tradeListEntries })
   const summaryList = tradeListEntries.map(([account, tradeList]) => {
+    const seedAccountSummary: IAccountSummaryV2 = {
+      account,
+      lossCount: 0,
+      realisedPnlInUsd: 0n,
+      winCount: 0,
+    }
     const sortedTradeList = tradeList.sort((a, b) => +a.blockTimestamp - +b.blockTimestamp)
+    const summary = sortedTradeList.reduce((seed, next): IAccountSummaryV2 => {
+      const winCount = seed.winCount + (next.realisedPnlUsd > 0n ? 1 : 0)
+      const lossCount = seed.lossCount + (next.realisedPnlUsd < 0n ? 1 : 0)
+      const realisedPnlInUsd = seed.realisedPnlInUsd + next.realisedPnlUsd
+      return {
+        account,
+        lossCount,
+        realisedPnlInUsd,
+        winCount,
+      }
+    }, seedAccountSummary)
+    return summary
   })
+  return summaryList
 }
 export function toAccountSummaryList(
   list: ITrade[],

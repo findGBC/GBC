@@ -402,7 +402,8 @@ export async function getCompetitionTrades(
     )
 
     const positionsOpenedList: ITradeV2[] = positionsOpened.positionOpens.map(fromJson.tradeJsonV2)
-    toAccountSummaryListV2(positionsOpenedList)
+    const summaryList = toAccountSummaryListV2(positionsOpenedList)
+    console.log({ summaryList })
     //console.log({ positionsOpened, positionsOpenedList })
   } catch (e) {
     console.log({ e })
