@@ -66,6 +66,7 @@ export const Constants = {
     SPOTIFY:
       'https://open.spotify.com/show/3GlhNSKDwwpUid4EBeQmlX?si=153bff92b20b4ba0',
     TWITTER: 'https://x.com/findGBC',
+    GBC_API: import.meta.env.VITE_GBC_API
   },
 }
 

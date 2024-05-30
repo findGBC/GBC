@@ -20,6 +20,16 @@
         "doc",
         "test"
       ]
+    },
+    {
+      "login": "Harry180",
+      "name": "Lukasz Harry89PL",
+      "avatar_url": "https://i.seadn.io/gcs/files/89961d5aa252c0f6d7730c1b7ebc7377.webp?auto=format&dpr=1&w=1920",
+      "profile": "https://github.com/Harry180",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ]
 }

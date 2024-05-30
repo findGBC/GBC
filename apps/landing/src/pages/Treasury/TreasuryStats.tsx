@@ -1,28 +1,18 @@
-import { useEffect, useState } from 'react'
-
 import { Stats } from '../../components/mollecules'
 import StatsItem from '../../components/mollecules/Stats/StatsItem'
-import type { TreasuryDetailsProps } from '../../global/type'
 import { useI18nContext } from '../../i18n/i18n-react'
+import { useTreasuryDataProviderContext } from "../../providers/TreasuryDataProvider";
 
-const TreasuryStats: React.FC<TreasuryDetailsProps> = ({ assets }) => {
+const TreasuryStats = () => {
   const { LL } = useI18nContext()
-  const [treasury, setTreasury] = useState<number>()
+  const { data } = useTreasuryDataProviderContext()
 
-  useEffect(() => {
-    let amount = 0
-    assets.map((a) => {
-      amount += a.balance * a.price
-    })
-
-    setTreasury(amount)
-  }, [assets])
   return (
     <div className="content-center w-full my-12">
       <Stats>
         <StatsItem
           title={LL.TREASURY.TOTAL_VALUE()}
-          value={treasury ?? 0}
+          value={data?.totalValue ?? 0}
           valueSymbol="$"
         ></StatsItem>
       </Stats>
