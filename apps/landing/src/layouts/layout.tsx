@@ -4,10 +4,11 @@ import { ToastContainer } from 'react-toastify'
 import { NavBar } from '../components/organism'
 import '../styles/app.css'
 import Footer from '../components/organism/Footer/Footer'
+import { TreasuryDataProvider } from '../providers/TreasuryDataProvider'
 
 const LayoutMain = (): JSX.Element => {
   return (
-    <>
+    <TreasuryDataProvider>
       <NavBar></NavBar>
       <main className="mt-1">
         <Outlet />
@@ -24,7 +25,7 @@ const LayoutMain = (): JSX.Element => {
         draggable
         pauseOnHover
       />
-    </>
+    </TreasuryDataProvider>
   )
 }
 
