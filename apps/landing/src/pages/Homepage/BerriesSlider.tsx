@@ -4,7 +4,7 @@ import Slider from '../../components/mollecules/Slider/Slider'
 
 function GetBerriesImg() {
   const berries: string[] = []
-  for (let b = 1; b < 42; b++) {
+  for (let b = 1; b < 43; b++) {
     berries.push(b.toString())
   }
   berries.sort(() => Math.random() - 0.5)

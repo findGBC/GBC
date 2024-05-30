@@ -53,7 +53,7 @@ export const Constants = {
     INSTAGRAM: 'https://www.instagram.com/findgbc',
     NANSEN: 'https://api-dev.nansen.ai/',
     PULSE: 'https://medium.com/@BlueberryPulse',
-    PUPPET: 'https://puppet.finance/',
+    PUPPET: '#puppet',
     RSS: {
       MEDIUM:
         'https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@findgbc',
@@ -113,19 +113,26 @@ export const TeamMembers: TeamMemberProps[] = [
     name: 'Monte',
     socialLink: 'https://twitter.com/monte_xyz',
   },
+  // {
+  //   id: 7,
+  //   img: 'oda',
+  //   jobs: [JobType.Dev],
+  //   name: 'Oda',
+  //   socialLink: 'https://twitter.com/crypto_oda',
+  // },
   {
     id: 7,
-    img: 'oda',
-    jobs: [JobType.Dev],
-    name: 'Oda',
-    socialLink: 'https://twitter.com/crypto_oda',
-  },
-  {
-    id: 8,
     img: 'cloud',
     jobs: [JobType.Gif],
     name: 'Cloud',
     socialLink: 'https://twitter.com/cloud_artto',
+  },
+  {
+    id: 8,
+    img: 'harry89pl',
+    jobs: [JobType.Dev],
+    name: 'Harry89PL',
+    socialLink: 'https://x.com/LukaszHarry',
   },
 ]
 

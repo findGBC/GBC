@@ -14,7 +14,7 @@ const News: React.FC = () => {
     <Animate initiallyVisible={false}>
       <section className="thin">
         <Title value={LL.BLOG.TITLE()} />
-        <Articles articles={articles.slice(0, 3)} />
+        <Articles articles={articles?.slice(0, 3)} />
         <div className="items-center mt-8 text-center">
           <Button
             btnType={ButtonType.Primary}
