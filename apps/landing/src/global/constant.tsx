@@ -1,5 +1,5 @@
-import { JobType } from './enum'
-import type { TeamMemberProps } from './type'
+import {JobType} from './enum'
+import type {TeamMemberProps} from './type'
 
 export const NansenRequestInfo: RequestInit = {
   body: null,
@@ -53,7 +53,7 @@ export const Constants = {
     INSTAGRAM: 'https://www.instagram.com/findgbc',
     NANSEN: 'https://api-dev.nansen.ai/',
     PULSE: 'https://medium.com/@BlueberryPulse',
-    PUPPET: 'https://puppet.finance/',
+    PUPPET: '#puppet',
     RSS: {
       MEDIUM:
         'https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@findgbc',
@@ -126,6 +126,27 @@ export const TeamMembers: TeamMemberProps[] = [
     jobs: [JobType.Gif],
     name: 'Cloud',
     socialLink: 'https://twitter.com/cloud_artto',
+  },
+  {
+    id: 9,
+    img: 'harry89pl',
+    jobs: [JobType.Dev],
+    name: 'Harry89PL',
+    socialLink: 'https://x.com/LukaszHarry',
+  },
+  {
+    id: 10,
+    img: 'cowchain',
+    jobs: [JobType.Dev],
+    name: 'Dev team',
+    socialLink: 'https://cowchain.io/',
+  },
+  {
+    id: 11,
+    img: 'tx',
+    jobs: [JobType.Copywriter, JobType.Analyst],
+    name: 'Tx',
+    socialLink: 'https://x.com/tx_analysor',
   },
 ]
 
