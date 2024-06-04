@@ -297,7 +297,14 @@ export interface IAccountSummary {
 }
 
 export interface IAccountSummaryV2 {
-  realisedPnlInUsd: bigint
+  realisedPnl: bigint
+  cumSize: bigint
+  avgCollateral: bigint
+  openPnl: bigint
+  avgSize: bigint
+  cumCollateral: bigint
+  pnl: bigint
+  maxCollateral: bigint
   account: string
   winCount: number
   lossCount: number
@@ -317,6 +324,14 @@ export interface IPricefeed extends IndexedType<'Pricefeed'> {
   l: bigint
   c: bigint
   tokenAddress: ITokenPricefeed
+}
+export interface IPricefeedV2 extends IndexedType<'Pricefeed'> {
+  timestamp: number
+  o: bigint
+  h: bigint
+  l: bigint
+  c: bigint
+  token: ITokenPricefeed
 }
 
 export interface IPriceLatest extends IndexedType<'PriceLatest'> {

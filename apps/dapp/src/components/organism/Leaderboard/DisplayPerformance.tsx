@@ -30,7 +30,7 @@ export const DisplayRoiPerformance = ({ roi }: DisplayRoiPerformanceProps) => {
     <div className="leading-3">
       <div className={className}>
         {roi > 0 ? '+' : null}
-        {`${Number(newLocal)} %`}
+        {`${Number(newLocal.split(',').join(''))} %`}
       </div>
     </div>
   )

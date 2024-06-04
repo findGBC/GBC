@@ -1,21 +1,22 @@
+import { IAccountSummaryV2 } from '../gmx-middleware'
 import { getMarginFees } from '../gmx-middleware/gmxUtils'
 
 import { BASIS_POINTS_DIVISOR } from './constant'
 import svgParts from './mappings/svgParts'
 import type {
-  IBerryDisplayTupleMap,
-  ICompetitionSchedule,
-  ICompetitionPrize,
   IAccountSummary,
+  IBerryDisplayTupleMap,
+  ICompetitionPrize,
+  ICompetitionSchedule,
 } from './types'
 import {
   IAttributeBackground,
-  IAttributeClothes,
+  IAttributeBadge,
   IAttributeBody,
+  IAttributeClothes,
   IAttributeExpression,
   IAttributeFaceAccessory,
   IAttributeHat,
-  IAttributeBadge,
   intervalTimeMap,
 } from './types'
 import { unixTimestampNow } from './utils'
@@ -123,7 +124,7 @@ export function getCompetitionMetrics(
 
 const MIN_PNL_THRESHOLD = USD_PERCISION * 1n
 
-export function isWinner(summary: IAccountSummary) {
+export function isWinner(summary: IAccountSummaryV2) {
   return summary.pnl > MIN_PNL_THRESHOLD
 }
 

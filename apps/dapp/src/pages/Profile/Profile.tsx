@@ -124,7 +124,10 @@ const Profile: React.FC = ({}) => {
       return '$ 0'
     }
     const prize =
-      (leaderboard.metrics.estFeePool * leaderboard.profile?.score) / leaderboard.totalScore
+      leaderboard.profile?.score > 0n
+        ? (leaderboard.metrics.estFeePool * leaderboard.profile?.score) / leaderboard.totalScore
+        : 0n
+
     return formatReadableUSD(prize, false, true)
   }
 

@@ -1,14 +1,16 @@
+import { zeroAddress } from 'viem'
+
 import { TOKEN_ADDRESS_TO_SYMBOL, TOKEN_DESCRIPTION_MAP } from './address/token'
-import { BASIS_POINTS_DIVISOR, MARGIN_FEE_BASIS_POINTS } from './constant'
+import { BASIS_POINTS_DIVISOR, MARGIN_FEE_BASIS_POINTS, USDG_DECIMALS } from './constant'
 import type {
+  IAccountSummary,
+  IAccountSummaryV2,
+  IPositionLiquidated,
+  ITokenDescription,
   ITrade,
   ITradeClosed,
   ITradeLiquidated,
-  IAccountSummary as IAccountSummary,
-  IPositionLiquidated,
-  ITokenDescription,
   ITradeV2,
-  IAccountSummaryV2,
 } from './types'
 import { TradeStatus } from './types'
 import { easeInExpo, formatFixed, getSafeMappedValue, groupByMapMany } from './utils'
@@ -50,34 +52,98 @@ export function isTradeLiquidated(trade: ITrade): trade is ITradeLiquidated {
   return trade.status === TradeStatus.LIQUIDATED
 }
 
+function calculateAverage(data: Array<Record<string, any>>, key: string) {
+  const arr = data.map((item) => BigInt(item[key]))
+  const total = arr.reduce((sum, size) => sum + size, BigInt(0))
+  const average = total / BigInt(arr.length)
+  return average
+}
+
 export function isTradeClosed(trade: ITrade): trade is ITradeClosed {
   return trade.status === TradeStatus.CLOSED
 }
 
-export function toAccountSummaryListV2(list: ITradeV2[]) {
+export function toAccountSummaryListV2(
+  list: ITradeV2[],
+  tokenPrices: Record<string, string>,
+  updatedPrices: Record<string, string>[],
+) {
   const tradeListMap = groupByMapMany(list, (a) => a.account)
+
   const tradeListEntries = Object.entries(tradeListMap)
+
   const summaryList = tradeListEntries.map(([account, tradeList]) => {
     const seedAccountSummary: IAccountSummaryV2 = {
       account,
+      avgCollateral: 0n,
+      avgSize: 0n,
+      cumCollateral: 0n,
+      cumSize: 0n,
       lossCount: 0,
-      realisedPnlInUsd: 0n,
+      maxCollateral: 0n,
+      openPnl: 0n,
+      pnl: 0n,
+      realisedPnl: 0n,
       winCount: 0,
     }
+    const maxUsedCollateral = tradeList
+      .map((el) => el.maxCollateralUsd)
+      .reduce((max, current) => (current > max ? current : max), BigInt(0))
+
     const sortedTradeList = tradeList.sort((a, b) => +a.blockTimestamp - +b.blockTimestamp)
+    const avgSize = calculateAverage(sortedTradeList, 'sizeInUsd')
+    // const avgSize = sortedTradeList.reduce((s, n) => (n.sizeInUsd > s ? n.sizeInUsd : s), 0n)
+    const avgCollateral = calculateAverage(sortedTradeList, 'collateralAmount')
+
     const summary = sortedTradeList.reduce((seed, next): IAccountSummaryV2 => {
       const winCount = seed.winCount + (next.realisedPnlUsd > 0n ? 1 : 0)
       const lossCount = seed.lossCount + (next.realisedPnlUsd < 0n ? 1 : 0)
-      const realisedPnlInUsd = seed.realisedPnlInUsd + next.realisedPnlUsd
+      const realisedPnlInUsd = seed.realisedPnl + next.realisedPnlUsd
+      const usedMinProfit = maxUsedCollateral - realisedPnlInUsd > 0n ? realisedPnlInUsd : 0n
+      const cumSize = seed.cumSize + next.cumulativeSizeUsd
+      const maxCollateral = usedMinProfit > maxUsedCollateral ? usedMinProfit : maxUsedCollateral
+      const cumCollateral = seed.cumCollateral + next.cumulativeCollateralUsd
+
+      let indexTokenMarkPrice = BigInt(0)
+
+      if (!tokenPrices[next.indexToken] || next.indexToken == zeroAddress) {
+        const nativePrice = updatedPrices.find(
+          (el) => el.tokenAddress.toLowerCase() === next.collateralToken.toLowerCase(),
+        )
+
+        indexTokenMarkPrice = BigInt(nativePrice?.maxPrice || 0)
+      } else {
+        indexTokenMarkPrice = BigInt(tokenPrices[next.indexToken])
+      }
+
+      const openDelta =
+        next.realisedPnlUsd === 0n
+          ? (indexTokenMarkPrice - next.maxCollateralUsd / next.maxCollateralToken) *
+            next.maxCollateralToken
+          : 0n
+    
+      const openPnl = seed.openPnl + openDelta
+
+      const pnl = openPnl + realisedPnlInUsd
+
       return {
         account,
+        avgCollateral: seed.avgCollateral,
+        avgSize,
+        cumCollateral,
+        cumSize,
         lossCount,
-        realisedPnlInUsd,
+        maxCollateral,
+        openPnl,
+        pnl,
+        realisedPnl: realisedPnlInUsd,
         winCount,
       }
     }, seedAccountSummary)
-    return summary
+
+    return { ...summary, avgCollateral, avgSize }
   })
+
   return summaryList
 }
 export function toAccountSummaryList(
@@ -86,6 +152,7 @@ export function toAccountSummaryList(
   endDate: number,
 ): IAccountSummary[] {
   const tradeListMap = groupByMapMany(list, (a) => a.account)
+
   const tradeListEntries = Object.entries(tradeListMap)
   const summaryList = tradeListEntries.map(([account, tradeList]) => {
     const seedAccountSummary: IAccountSummary = {
@@ -105,7 +172,7 @@ export function toAccountSummaryList(
       winCount: 0,
     }
 
-    const sortedTradeList = tradeList.sort((a, b) => a.timestamp - b.timestamp)
+    const sortedTradeList = tradeList.sort((a, b) => +a.timestamp - +b.timestamp)
 
     const initSeed = {
       maxUsedCollateral: 0n,

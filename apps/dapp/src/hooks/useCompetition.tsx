@@ -1,26 +1,32 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { gmxSubgraph } from '../global/gmx-middleware'
-import { div, toAccountSummaryList } from '../global/gmx-middleware/gmxUtils'
+import { div, toAccountSummaryListV2 } from '../global/gmx-middleware/gmxUtils'
+import type { IBlueberryLadder, IRequestCompetitionLadderApi } from '../global/middleware'
 import {
-  isWinner,
+  BLUEBERRY_REFFERAL_CODE,
+  CHAIN,
+  COMPETITION_METRIC_LIST,
   USD_PERCISION,
   getCompetitionMetrics,
-  BLUEBERRY_REFFERAL_CODE,
-  COMPETITION_METRIC_LIST,
   getCompetitionSchedule,
-  CHAIN,
+  isWinner,
   unixTimestampNow,
 } from '../global/middleware'
-import type { IBlueberryLadder, IRequestCompetitionLadderApi } from '../global/middleware'
 
 const MIN_MAX_COLLATERAL = USD_PERCISION * 200n // 200 USD
 const MIN_ROI = 150n // 1.5%
 
 const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
   const tradeList = await gmxSubgraph.getCompetitionTrades(queryParams)
-  const priceMap = await gmxSubgraph.getPriceMap(queryParams.to, queryParams)
-  const summaryList = toAccountSummaryList(tradeList, priceMap, queryParams.to)
+
+  const priceMap = await gmxSubgraph.getPriceMapV2(queryParams.to, queryParams)
+  const updatedPrices = await fetch('https://arbitrum-api.gmxinfra2.io/prices/tickers').then(
+    (res) => res.json(),
+  )
+
+  const summaryList = toAccountSummaryListV2(tradeList, priceMap, updatedPrices)
+
   const { size, activeWinnerCount, totalMaxCollateral } = summaryList.reduce(
     (seed, next) => {
       const roi = div(next.pnl, next.maxCollateral)
@@ -49,7 +55,9 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
     },
   )
   const averageMaxCollateral = totalMaxCollateral ? totalMaxCollateral / activeWinnerCount : 0n
+
   const metrics = getCompetitionMetrics(size, queryParams.schedule)
+
   const totalScore = summaryList.reduce((s, n) => {
     const score =
       queryParams.metric === 'roi'
@@ -60,7 +68,7 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
         : n[queryParams.metric]
 
     return score > 0n ? s + score : s
-  }, 0n)
+  }, 1n)
   const connectedProfile: null | IBlueberryLadder = queryParams.account
     ? {
         account: queryParams.account,

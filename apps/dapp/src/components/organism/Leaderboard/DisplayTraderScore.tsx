@@ -8,10 +8,14 @@ type DisplayTraderScoreProps = {
 }
 
 const DisplayTraderScore = ({ score, estFeePool, totalScore }: DisplayTraderScoreProps) => {
-  const reward = (estFeePool * score) / totalScore
+  const reward = (estFeePool * score) / (totalScore || 1n)
 
   if (reward < 0) {
-    return null
+    return (
+      <span className="p-2">
+        0 $
+      </span>
+    )
   }
 
   return (

@@ -1,23 +1,24 @@
 import { O } from '@aelea/core'
 import { map } from '@most/core'
-import { gql, cacheExchange, fetchExchange } from '@urql/core'
+import { cacheExchange, fetchExchange, gql } from '@urql/core'
 
 import { CHAIN } from '../middleware'
 
 import { TOKEN_SYMBOL } from './address/symbol'
 import { intervalTimeMap } from './constant'
-import { getTokenDescription, toAccountSummaryListV2 } from './gmxUtils'
+import { getTokenDescription } from './gmxUtils'
 import type {
-  IRequestAccountApi,
   IChainParamApi,
-  IRequestPagePositionApi,
+  IEnsRegistration,
+  IPriceLatest,
   IPricefeed,
+  IPricefeedV2,
+  IRequestAccountApi,
+  IRequestPageApi,
+  IRequestPagePositionApi,
   IRequestPricefeedApi,
   IRequestTimerangeApi,
-  IEnsRegistration,
-  IRequestPageApi,
   ITrade,
-  IPriceLatest,
   ITradeV2,
 } from './types'
 import {
@@ -254,6 +255,18 @@ async function querySubgraph<T extends IChainParamApi>(params: T, document: stri
   return queryProvider(gql(document) as any, {})
 }
 
+async function querySubgraphV2<T extends IChainParamApi>(
+  params: T,
+  document: string,
+): Promise<any> {
+  const queryProvider = subgraphChainMap[params.chain]
+
+  if (!queryProvider) {
+    throw new Error(`Chain ${getChainName(params.chain) || params.chain} is not supported`)
+  }
+
+  return arbitrumGraphV2(gql(document) as any, {})
+}
 async function getPriceLatestMap(queryParams: IChainParamApi): Promise<IPriceLatest[]> {
   const res = await await querySubgraph(
     queryParams,
@@ -313,66 +326,88 @@ export async function getPriceMap(
   return priceMap
 }
 
+export async function getPriceMapV2(
+  time: number,
+  queryParams: IChainParamApi,
+): Promise<{ [x: string]: bigint }> {
+  const priceMap = await querySubgraphV2(
+    queryParams,
+    `
+      {
+        priceCandles(where: { timestamp_lt: ${
+          Math.floor(time / intervalTimeMap.MIN5) * intervalTimeMap.MIN5
+        }}, first: 1000) {
+          id
+          timestamp
+          token
+          c
+          interval
+        }
+      }
+    `,
+  ).then((res) => {
+    const list = groupByKeyMap(
+      res.priceCandles,
+      (item: IPricefeedV2) => item.token,
+      (x) => x.c,
+    )
+    return list
+  })
+
+  return priceMap
+}
+
 export async function getCompetitionTrades(
   queryParams: IRequestPageApi & { referralCode: string },
 ) {
   const newLocal = intervalTimeMap.HR24 * 3
-  const competitionAccountListQuery = fetchHistoricTrades(
-    { ...queryParams, offset: 0, pageSize: 1000 },
-    async (params) => {
-      const res = await subgraphChainMap[queryParams.chain](
-        gql(`
-        query {
-            trades(first: 1000, skip: ${params.offset}, where: { entryReferralCode: "${queryParams.referralCode}", timestamp_gte: ${params.from}, timestamp_lt: ${params.to}}) {
-            # trades(first: 1000, skip: ${params.offset}, where: { timestamp_gte: ${params.from}, timestamp_lt: ${params.to}}) {
-                ${tradeFields}
-                entryReferralCode
-                entryReferrer
+  try {
+    const referralAccountsRes = await fetchHistoricTrades(
+      { ...queryParams, offset: 0, pageSize: 1000 },
+      async (params) => {
+        const res = await arbitrumGraphV2(
+          gql(`
+            {
+            referralAccounts(first: 1000, skip: ${params.offset}, where: { code: "${queryParams.referralCode}", blockTimestamp_gte: ${params.from}, blockTimestamp_lt: ${params.to}}) {
+                id
                 }
             }
         `),
-        {},
-      )
+          {},
+        )
 
-      return res.trades as ITrade[]
-    },
-    newLocal,
-  )
-  try {
-    const referralAccountsRes = await arbitrumGraphV2(
-      gql(`
-            query {
- 	referralAccounts(where: {code: "0x424c554542455252590000000000000000000000000000000000000000000000"}) {
- 	  id
- 	}
-}
-        `),
-      {},
+        return res.referralAccounts
+      },
+      newLocal,
     )
-    const refIds = referralAccountsRes.referralAccounts.map((ref: any) => `"${ref.id}"`)
+    // const referralAccountsRes = await arbitrumGraphV2(
+    //   gql(`
+    //         {
+    //           referralAccounts(where: {code: "${queryParams.referralCode}"}, first: 1000) {
+    //             id
+    //           }
+    //         }
+    //     `),
+    //   {},
+    // )
+
+    const refIds = referralAccountsRes.map((ref: any) => `"${ref.id}"`)
     const idsString = refIds.join(', ')
-    const orderCreators = await arbitrumGraphV2(
-      gql(`
-        query {
-          orderCreateds(where: {account_in: [${idsString}]}) {
-             account
-             isLong
-             key
-             executionFee
-             initialCollateralToken
-             acceptablePrice
-            }
-          }`),
-      {},
-    )
 
-    const positionsOpened = await arbitrumGraphV2(
-      gql(`
+    // TODO: add params
+
+    const positionsOpened = await fetchHistoricTrades(
+      { ...queryParams, offset: 0, pageSize: 1000 },
+      async (params) => {
+        const res = await arbitrumGraphV2(
+          gql(`
         query {
-          positionOpens(where: {account_in: [${idsString}]}) {
+            positionOpens(first: 1000, skip: ${params.offset}, where: { account_in: [${idsString}], blockTimestamp_gte: ${params.from}, blockTimestamp_lt: ${params.to}}) {
               id
               key
-              link
+              link {
+                id
+              }
               account
               market
               collateralToken
@@ -381,7 +416,9 @@ export async function getCompetitionTrades(
               sizeInTokens
               collateralAmount
               realisedPnlUsd
-              referralAccount
+              referralAccount {
+                id
+              }
               referralMember
               cumulativeSizeUsd
               cumulativeSizeToken
@@ -396,22 +433,83 @@ export async function getCompetitionTrades(
               blockTimestamp
               transactionHash
               logIndex
+                }
             }
-          }`),
-      {},
+        `),
+          {},
+        )
+
+        return res.positionOpens as ITradeV2[]
+      },
+      newLocal,
     )
 
-    const positionsOpenedList: ITradeV2[] = positionsOpened.positionOpens.map(fromJson.tradeJsonV2)
-    const summaryList = toAccountSummaryListV2(positionsOpenedList)
-    console.log({ summaryList })
+    const positionSettleds = await fetchHistoricTrades(
+      { ...queryParams, offset: 0, pageSize: 1000 },
+      async (params) => {
+        const res = await arbitrumGraphV2(
+          gql(`
+        query {
+            positionSettleds(first: 1000, skip: ${params.offset}, where: { account_in: [${idsString}], blockTimestamp_gte: ${params.from}, blockTimestamp_lt: ${params.to}}) {
+             id
+              key
+              link {
+                id
+              }
+              account
+              market
+              collateralToken
+              indexToken
+              sizeInUsd
+              sizeInTokens
+              collateralAmount
+              realisedPnlUsd
+              referralAccount {
+                id
+              }
+              cumulativeSizeUsd
+              cumulativeSizeToken
+              cumulativeCollateralUsd
+              cumulativeCollateralToken
+              maxSizeUsd
+              maxSizeToken
+              maxCollateralUsd
+              maxCollateralToken
+              isLong
+              blockNumber
+              blockTimestamp
+              transactionHash
+              logIndex
+                }
+            }
+        `),
+          {},
+        )
+
+        return res.positionSettleds as ITradeV2[]
+      },
+      newLocal,
+    )
+
+    const mergedArray = positionsOpened.map((item1: ITradeV2) => {
+      const matchingItem = positionSettleds.find(
+        (item2: ITradeV2) => item2.sizeInTokens === item1.sizeInTokens,
+      )
+      return matchingItem ? { ...item1, ...matchingItem } : item1
+    })
+
+    const positionsOpenedList: ITradeV2[] = mergedArray.map(fromJson.tradeJsonV2)
+
+    return positionsOpenedList
     //console.log({ positionsOpened, positionsOpenedList })
   } catch (e) {
     console.log({ e })
   }
 
-  const historicTradeList = await competitionAccountListQuery
-  const tradeList: ITrade[] = historicTradeList.map(fromJson.tradeJson)
-  return tradeList
+  // const historicTradeList = await competitionAccountListQuery
+  // const tradeList: ITrade[] = historicTradeList.map(fromJson.tradeJson)
+
+  // return tradeList
 }
 
 const increasePositionFields = `
