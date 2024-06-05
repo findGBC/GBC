@@ -82,9 +82,9 @@ const en: BaseTranslation = {
   },
 
   TEAM: {
-    JOB: '{job|{*: Team Member, cofounder: Co-Founder, ceo: CEO, advisor: Advisor, dev: Developer, coo: COO, cmo: CMO, cm: Community Manager, gmx: GMX Founder, gif: Gif Maker}}',
+    JOB: '{job|{*: Team Member, cofounder: Co-Founder, ceo: CEO, advisor: Advisor, dev: Developer, coo: COO, cmo: CMO, cm: Community Manager, gmx: GMX Founder, gif: Gif Maker, cw: Copywriter, analyst: Analyst}}',
     TEXT: "While GBC thrives on community-driven DAO decisions, we have a dedicated team fine-tuning our project's execution. They bridge the DAO's vision with the expertise needed for tangible success. Meet the minds behind the movement.",
-    TITLE: 'Meet the Team',
+    TITLE: 'Meet the Team and Contributors',
   },
 
   TREASURY: {

@@ -13,7 +13,7 @@ const TreasurySigners: React.FC = ({}) => {
       <div>{LL.TREASURY.SIGNERS_TEXT()}</div>
       <div className="flex flex-wrap mt-6">
         {SignerMembers.map((member) => (
-          <TeamMember {...member} />
+          <TeamMember key={member.id} {...member} />
         ))}
       </div>
     </div>
