@@ -91,6 +91,7 @@ export function toAccountSummaryListV2(
       .reduce((max, current) => (current > max ? current : max), BigInt(0))
 
     const sortedTradeList = tradeList.sort((a, b) => +a.blockTimestamp - +b.blockTimestamp)
+
     const avgSize = calculateAverage(sortedTradeList, 'sizeInUsd')
     // const avgSize = sortedTradeList.reduce((s, n) => (n.sizeInUsd > s ? n.sizeInUsd : s), 0n)
     const avgCollateral = calculateAverage(sortedTradeList, 'collateralAmount')
@@ -100,7 +101,7 @@ export function toAccountSummaryListV2(
       const lossCount = seed.lossCount + (next.realisedPnlUsd < 0n ? 1 : 0)
       const realisedPnlInUsd = seed.realisedPnl + next.realisedPnlUsd
       const usedMinProfit = maxUsedCollateral - realisedPnlInUsd > 0n ? realisedPnlInUsd : 0n
-      const cumSize = seed.cumSize + next.cumulativeSizeUsd
+      const cumSize = seed.cumSize + next.sizeInUsd
       const maxCollateral = usedMinProfit > maxUsedCollateral ? usedMinProfit : maxUsedCollateral
       const cumCollateral = seed.cumCollateral + next.cumulativeCollateralUsd
 
@@ -121,7 +122,7 @@ export function toAccountSummaryListV2(
           ? (indexTokenMarkPrice - next.maxCollateralUsd / next.maxCollateralToken) *
             next.maxCollateralToken
           : 0n
-    
+
       const openPnl = seed.openPnl + openDelta
 
       const pnl = openPnl + realisedPnlInUsd

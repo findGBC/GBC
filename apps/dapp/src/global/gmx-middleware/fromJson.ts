@@ -1,17 +1,17 @@
 import { isTradeClosed, isTradeLiquidated } from './gmxUtils'
 import type {
-  ITrade,
+  IAbstractPositionAdjustment,
   IIdentifiableEntity,
   IPositionClose,
   IPositionDecrease,
   IPositionIncrease,
   IPositionLiquidated,
   IPositionUpdate,
-  IAbstractPositionAdjustment,
-  IPricefeed,
   IPriceLatest,
+  IPricefeed,
   IStake,
   ITokenPricefeed,
+  ITrade,
   ITradeV2,
 } from './types'
 
@@ -137,7 +137,7 @@ export function tradeJsonV2<T extends ITradeV2>(json: T): T {
   const sizeInUsd = BigInt(json.sizeInUsd)
   const sizeInTokens = BigInt(json.sizeInTokens)
   const collateralAmount = BigInt(json.collateralAmount)
-  const referralMember = BigInt(json.referralMember)
+  const referralMember = BigInt(json.referralMember || 0)
   const cumulativeSizeUsd = BigInt(json.cumulativeSizeUsd)
   const cumulativeSizeToken = BigInt(json.cumulativeSizeToken)
   const cumulativeCollateralUsd = BigInt(json.cumulativeCollateralUsd)

@@ -1,4 +1,4 @@
-import { IAccountSummaryV2 } from '../gmx-middleware'
+import type { IAccountSummaryV2 } from '../gmx-middleware'
 import { getMarginFees } from '../gmx-middleware/gmxUtils'
 
 import { BASIS_POINTS_DIVISOR } from './constant'
