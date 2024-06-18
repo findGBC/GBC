@@ -3,12 +3,7 @@ import { getMarginFees } from '../gmx-middleware/gmxUtils'
 
 import { BASIS_POINTS_DIVISOR } from './constant'
 import svgParts from './mappings/svgParts'
-import type {
-  IAccountSummary,
-  IBerryDisplayTupleMap,
-  ICompetitionPrize,
-  ICompetitionSchedule,
-} from './types'
+import type { IBerryDisplayTupleMap, ICompetitionPrize, ICompetitionSchedule } from './types'
 import {
   IAttributeBackground,
   IAttributeBadge,

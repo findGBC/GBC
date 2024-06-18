@@ -201,7 +201,6 @@ export const fetchTrades = async <T extends IRequestPagePositionApi & IChainPara
   getList: (res: T) => Promise<R[]>,
 ): Promise<R[]> => {
   const list = await getList(params)
-
   const nextOffset = params.offset + 1000
 
   if (nextOffset > 5000) {
@@ -360,9 +359,8 @@ export async function getPriceMapV2(
 export async function getCompetitionTrades(
   queryParams: IRequestPageApi & { referralCode: string },
 ) {
-  const newLocal = intervalTimeMap.HR24 * 3
   try {
-    const positionsOpened = await fetchHistoricTrades(
+    const positionsOpened = await fetchTrades(
       { ...queryParams, offset: 0, pageSize: 1000 },
       async (params) => {
         const res = await arbitrumGraphV2(
@@ -408,10 +406,9 @@ export async function getCompetitionTrades(
 
         return res.positionOpens as ITradeV2[]
       },
-      newLocal,
     )
 
-    const positionSettleds = await fetchHistoricTrades(
+    const positionSettleds = await fetchTrades(
       { ...queryParams, offset: 0, pageSize: 1000 },
       async (params) => {
         const res = await arbitrumGraphV2(
@@ -453,37 +450,86 @@ export async function getCompetitionTrades(
         `),
           {},
         )
-
         return res.positionSettleds as ITradeV2[]
       },
-      newLocal,
     )
 
-    const mergedArray: ITradeV2[] = []
-    const matchedIndices = new Set<number>()
-
-    positionSettleds.forEach((item1) => {
-      const matchingIndex = positionsOpened.findIndex(
-        (item2) => item2.sizeInTokens === item1.sizeInTokens,
-      )
-
-      if (matchingIndex !== -1) {
-        mergedArray.push({ ...positionsOpened[matchingIndex], ...item1 })
-        matchedIndices.add(matchingIndex)
-      } else {
-        mergedArray.push(item1)
-      }
-    })
-
-    positionsOpened.forEach((item2, index) => {
-      if (!matchedIndices.has(index)) {
-        mergedArray.push(item2)
-      }
-    })
-
-    const positionsOpenedList: ITradeV2[] = mergedArray.map(fromJson.tradeJsonV2)
+    const positionsOpenedList: ITradeV2[] = positionsOpened
+      .concat(positionSettleds)
+      .map(fromJson.tradeJsonV2)
 
     return positionsOpenedList
+  } catch (e) {
+    console.log({ e })
+  }
+}
+export async function getCompetitionTradeIncreases(
+  queryParams: IRequestPageApi & { referralCode: string },
+  accounts: string[],
+) {
+  const refIds = accounts.map((ref: any) => `"${ref}"`)
+  const idsString = refIds.join(', ')
+  try {
+    const positionIncreases = await fetchTrades(
+      { ...queryParams, offset: 0, pageSize: 1000 },
+      async (params) => {
+        const res = await arbitrumGraphV2(
+          gql(`
+        query {
+            positionIncreases(first: 1000, skip: ${params.offset}, where: {account_in: [${idsString}], market: "0x70d95587d40a2caf56bd97485ab3eec10bee6336", blockTimestamp_gte: ${params.from}, blockTimestamp_lt: ${params.to}}) {
+              id
+              account
+              market
+              collateralToken
+              sizeInUsd
+              sizeInTokens
+              sizeDeltaUsd
+              collateralAmount
+              isLong
+              blockNumber
+              blockTimestamp
+              transactionHash
+              logIndex
+                }
+            }
+        `),
+          {},
+        )
+
+        return res.positionIncreases
+      },
+    )
+
+    const positionDecreases = await fetchTrades(
+      { ...queryParams, offset: 0, pageSize: 1000 },
+      async (params) => {
+        const res = await arbitrumGraphV2(
+          gql(`
+        query {
+            positionDecreases(first: 1000, skip: ${params.offset}, where: {account_in: [${idsString}], market: "0x70d95587d40a2caf56bd97485ab3eec10bee6336", blockTimestamp_gte: ${params.from}, blockTimestamp_lt: ${params.to}}) {
+              id
+              account
+              market
+              collateralToken
+              sizeInUsd
+              sizeInTokens
+              sizeDeltaUsd
+              collateralAmount
+              isLong
+              blockNumber
+              blockTimestamp
+              transactionHash
+              logIndex
+                }
+            }
+        `),
+          {},
+        )
+
+        return res.positionDecreases
+      },
+    )
+    return positionIncreases.concat(positionDecreases)
   } catch (e) {
     console.log({ e })
   }

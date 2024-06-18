@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { gmxSubgraph } from '../global/gmx-middleware'
 import { div, toAccountSummaryListV2 } from '../global/gmx-middleware/gmxUtils'
+import { groupByMapMany } from '../global/gmx-middleware/utils'
 import type { IBlueberryLadder, IRequestCompetitionLadderApi } from '../global/middleware'
 import {
   BLUEBERRY_REFFERAL_CODE,
@@ -20,10 +21,19 @@ const MIN_ROI = 150n // 1.5%
 const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
   const tradeList = await gmxSubgraph.getCompetitionTrades(queryParams)
 
+  const accounts = tradeList ? groupByMapMany(tradeList, (t) => t.account) : []
+
   const priceMap = await gmxSubgraph.getPriceMapV2(queryParams.to, queryParams)
   const updatedPrices = await fetch('https://arbitrum-api.gmxinfra2.io/prices/tickers').then(
     (res) => res.json(),
   )
+  const incr = await gmxSubgraph.getCompetitionTradeIncreases(queryParams, Object.keys(accounts))
+  const incrSize = incr
+    ? incr.reduce((seed: bigint, next: any) => {
+        seed += BigInt(next.sizeDeltaUsd)
+        return seed
+      }, 0n)
+    : 0n
 
   const summaryList = toAccountSummaryListV2(tradeList, priceMap, updatedPrices)
 
@@ -56,7 +66,7 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
   )
   const averageMaxCollateral = totalMaxCollateral ? totalMaxCollateral / activeWinnerCount : 0n
 
-  const metrics = getCompetitionMetrics(size, queryParams.schedule)
+  const metrics = getCompetitionMetrics(incrSize, queryParams.schedule)
 
   const totalScore = summaryList.reduce((s, n) => {
     const score =
