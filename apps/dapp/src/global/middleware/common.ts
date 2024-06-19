@@ -91,7 +91,7 @@ export function getCompetitionSchedule(
   const competitionMonth = date.getUTCMonth()
 
   const start = Date.UTC(competitionYear, competitionMonth) / 1000
-  const duration = intervalTimeMap.HR24 * 25 + intervalTimeMap.MIN60 * 16
+  const duration = intervalTimeMap.HR24 * 27 + intervalTimeMap.MIN60 * 16
   const end = start + duration
 
   const elapsed = Math.min(unixTime, end) - start
