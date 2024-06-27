@@ -28,10 +28,10 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
   const temp = positions.map((el) => {
     return {
       account: el.id,
-      cumCollateral: el.cumsumCollateral,
+      avgCollateral: el.cumsumCollateral,
       cumSize: BigInt(el.cumsumSize),
       lossCount: el.losses,
-      maxCollateral: BigInt(el.sumMaxSize),
+      maxCollateral: BigInt(el.maxCapital),
       openPnl: BigInt(el.startUnrealizedPnl),
       pnl: BigInt(el.realizedPnl) - BigInt(el.startUnrealizedPnl) - BigInt(el.realizedFees),
       realisedPnl: BigInt(el.realizedPnl),

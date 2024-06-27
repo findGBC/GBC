@@ -110,7 +110,7 @@ export function getCompetitionMetrics(
   competition: ICompetitionSchedule,
 ): ICompetitionPrize {
   const estSize = (size * BigInt(competition.duration)) / BigInt(competition.elapsed)
-  const feeMultiplier = 950n
+  const feeMultiplier = 750n
   const feePool = (getMarginFees(size) * feeMultiplier) / BASIS_POINTS_DIVISOR
   const estFeePool = (feePool * BigInt(competition.duration)) / BigInt(competition.elapsed)
 
