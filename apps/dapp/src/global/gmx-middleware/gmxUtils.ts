@@ -2,7 +2,7 @@ import { TOKEN_ADDRESS_TO_SYMBOL, TOKEN_DESCRIPTION_MAP } from './address/token'
 import { BASIS_POINTS_DIVISOR, MARGIN_FEE_BASIS_POINTS } from './constant'
 import type { ITokenDescription, ITrade, ITradeClosed, ITradeLiquidated } from './types'
 import { TradeStatus } from './types'
-import { easeInExpo, formatFixed, getSafeMappedValue } from './utils'
+import { easeInExpo, formatFixed, getDenominator, getSafeMappedValue } from './utils'
 
 export function safeDiv(a: bigint, b: bigint): bigint {
   if (b === 0n) {
@@ -72,4 +72,7 @@ export function getTokenDescription(
   token: keyof typeof TOKEN_ADDRESS_TO_SYMBOL,
 ): ITokenDescription {
   return TOKEN_DESCRIPTION_MAP[getSafeMappedValue(TOKEN_ADDRESS_TO_SYMBOL, token, token)]
+}
+export function getTokenAmount(amountUsd: bigint, price: bigint, decimals: number) {
+  return (amountUsd * getDenominator(decimals)) / price
 }

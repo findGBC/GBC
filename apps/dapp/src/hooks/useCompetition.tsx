@@ -1,8 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { gmxSubgraph } from '../global/gmx-middleware'
-import { div } from '../global/gmx-middleware/gmxUtils'
-import { groupByMapMany } from '../global/gmx-middleware/utils'
+import { div, getTokenAmount } from '../global/gmx-middleware/gmxUtils'
+import {
+  formatFixed,
+  getMappedValue,
+  groupByMapMany,
+  readableNumber,
+} from '../global/gmx-middleware/utils'
 import type { IBlueberryLadder, IRequestCompetitionLadderApi } from '../global/middleware'
 import {
   BLUEBERRY_REFFERAL_CODE,
@@ -14,6 +19,7 @@ import {
   isWinner,
   unixTimestampNow,
 } from '../global/middleware'
+import { CHAIN_ADDRESS_MAP } from '../global/middleware/address/token'
 
 const MIN_MAX_COLLATERAL = USD_PERCISION * 200n // 200 USD
 const MIN_ROI = 150n // 1.5%
@@ -22,10 +28,12 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
   const tradeList = await gmxSubgraph.getCompetitionTrades(queryParams)
 
   const accounts = tradeList ? groupByMapMany(tradeList, (t) => t.account) : []
-
+  const priceMap = await fetch('https://arbitrum-api.gmxinfra2.io/prices/tickers').then((res) =>
+    res.json(),
+  )
   const positions = await gmxSubgraph.getGMXPositions(queryParams.from, Object.keys(accounts))
 
-  const temp = positions.map((el) => {
+  const traders = positions.map((el) => {
     return {
       account: el.id,
       avgCollateral: el.cumsumCollateral,
@@ -38,7 +46,7 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
       winCount: el.wins,
     }
   })
-  const { size, activeWinnerCount, totalMaxCollateral } = temp.reduce(
+  const { size, activeWinnerCount, totalMaxCollateral } = traders.reduce(
     (seed, next) => {
       const roi = div(next.pnl, next.maxCollateral)
 
@@ -69,7 +77,7 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
 
   const metrics = getCompetitionMetrics(size, queryParams.schedule)
 
-  const totalScore = temp.reduce((s, n) => {
+  const totalScore = traders.reduce((s, n) => {
     const score =
       queryParams.metric === 'roi'
         ? div(
@@ -101,7 +109,7 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
         winCount: 0,
       }
     : null
-  const sortedCompetitionList: IBlueberryLadder[] = temp
+  const sortedCompetitionList: IBlueberryLadder[] = traders
     .map((summary) => {
       const maxCollateral =
         summary.maxCollateral > averageMaxCollateral ? summary.maxCollateral : averageMaxCollateral
@@ -131,22 +139,25 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
 
   if (queryParams.schedule.ended) {
     // log CSV file for airdrop
-    // const nativeToken = getMappedValue(CHAIN_ADDRESS_MAP, queryParams.chain).NATIVE_TOKEN
-    // console.log(
-    //   'token_type,token_address,receiver,amount,id\n' +
-    //     sortedCompetitionList
-    //       .filter((x) => {
-    //         const prize = (metrics.feePool * x.score) / totalScore
-    //         return prize > USD_PERCISION
-    //       })
-    //       .map((x, idx) => {
-    //         const ethPrice = BigInt(priceMap['_' + nativeToken])
-    //         const prizeUsd = (metrics.feePool * x.score) / totalScore
-    //         const tokenAmount = formatFixed(getTokenAmount(prizeUsd, ethPrice, 18), 18)
-    //         return `erc20,${nativeToken},${x.account},${readableNumber(tokenAmount)},`
-    //       })
-    //       .join('\n'),
-    // )
+    const nativeToken = getMappedValue(CHAIN_ADDRESS_MAP, queryParams.chain).NATIVE_TOKEN
+    console.log(
+      'token_type,token_address,receiver,amount,id\n' +
+        sortedCompetitionList
+          .filter((x) => {
+            const prize = (metrics.feePool * x.score) / totalScore
+            return prize > USD_PERCISION
+          })
+          .map((x, idx) => {
+            const ethPrice = BigInt(
+              priceMap.find((token) => token.tokenAddress.toLowerCase() === nativeToken).maxPrice ||
+                0,
+            )
+            const prizeUsd = (metrics.feePool * x.score) / totalScore
+            const tokenAmount = formatFixed(getTokenAmount(prizeUsd, ethPrice, 1), 18)
+            return `erc20,${nativeToken},${x.account},${readableNumber(tokenAmount)},`
+          })
+          .join('\n'),
+    )
   }
 
   return {
