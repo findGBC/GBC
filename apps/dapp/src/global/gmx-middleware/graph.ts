@@ -10,6 +10,7 @@ import { getTokenDescription } from './gmxUtils'
 import type {
   IChainParamApi,
   IEnsRegistration,
+  IPositionV2,
   IPriceLatest,
   IPricefeed,
   IPricefeedV2,
@@ -18,7 +19,6 @@ import type {
   IRequestPagePositionApi,
   IRequestPricefeedApi,
   IRequestTimerangeApi,
-  ITrade,
   ITradeV2,
 } from './types'
 import {
@@ -50,6 +50,12 @@ export const arbitrumGraphV2 = createSubgraphClient({
   url: 'https://api.studio.thegraph.com/query/36314/gmx-blueberry-club/version/latest',
 })
 
+export const gmxGraph = createSubgraphClient({
+  exchanges: [cacheExchange, fetchExchange],
+  fetch: fetch as any,
+  url: 'https://gmx.squids.live/gmx-synthetics-arbitrum/graphql',
+})
+
 export const arbitrumGraphDev = createSubgraphClient({
   exchanges: [cacheExchange, fetchExchange],
   fetch: fetch as any,
@@ -67,10 +73,10 @@ export const avalancheGraph = createSubgraphClient({
   url: 'https://api.thegraph.com/subgraphs/name/nissoh/gmx-avalanche',
 })
 
-export const subgraphDevChainMap: { [p in CHAIN]: typeof arbitrumGraph } = {
-  [CHAIN.ARBITRUM]: arbitrumGraphDev,
-  [CHAIN.AVALANCHE]: avalancheGraphDev,
-} as any
+// export const subgraphDevChainMap: { [p in CHAIN]: typeof arbitrumGraph } = {
+//   [CHAIN.ARBITRUM]: arbitrumGraphDev,
+//   [CHAIN.AVALANCHE]: avalancheGraphDev,
+// } as any
 
 export const subgraphChainMap: { [p in CHAIN]: typeof arbitrumGraph } = {
   [CHAIN.ARBITRUM]: arbitrumGraph,
@@ -120,60 +126,60 @@ export const getEnsProfile = O(
   }),
 )
 
-export async function getProfilePickList(idList: string[]): Promise<IEnsRegistration[]> {
-  if (idList.length === 0) {
-    return []
-  }
+// export async function getProfilePickList(idList: string[]): Promise<IEnsRegistration[]> {
+//   if (idList.length === 0) {
+//     return []
+//   }
 
-  const newLocal = `{
-  ${idList
-    .map(
-      (id) => `
-  _${id}: account(id: "${id}") {
-    id
-    registrations(orderBy: expiryDate, orderDirection: desc) {
-      expiryDate
-      labelName
-      id
-      domain {
-        resolvedAddress {
-          id
-        }
-        resolver {
-          texts
-        }
-      }
-      expiryDate
-    }
-  }
-`,
-    )
-    .join('')}
-}
-`
+//   const newLocal = `{
+//   ${idList
+//     .map(
+//       (id) => `
+//   _${id}: account(id: "${id}") {
+//     id
+//     registrations(orderBy: expiryDate, orderDirection: desc) {
+//       expiryDate
+//       labelName
+//       id
+//       domain {
+//         resolvedAddress {
+//           id
+//         }
+//         resolver {
+//           texts
+//         }
+//       }
+//       expiryDate
+//     }
+//   }
+// `,
+//     )
+//     .join('')}
+// }
+// `
 
-  const nowTime = unixTimestampNow()
-  const res = await ensGraph(gql(newLocal), {})
-  const rawList = Object.values(res)
-    .map((res: any) => {
-      if (!Array.isArray(res?.registrations)) {
-        return null
-      }
+//   const nowTime = unixTimestampNow()
+//   const res = await ensGraph(gql(newLocal), {})
+//   const rawList = Object.values(res)
+//     .map((res: any) => {
+//       if (!Array.isArray(res?.registrations)) {
+//         return null
+//       }
 
-      return res.registrations.filter((x: IEnsRegistration) => {
-        return x.domain.resolvedAddress && Number(x?.expiryDate) > nowTime
-      })[0]
-    })
-    .filter(Boolean) as IEnsRegistration[]
+//       return res.registrations.filter((x: IEnsRegistration) => {
+//         return x.domain.resolvedAddress && Number(x?.expiryDate) > nowTime
+//       })[0]
+//     })
+//     .filter(Boolean) as IEnsRegistration[]
 
-  return rawList
-}
+//   return rawList
+// }
 
-export const getEnsProfileListPick = O(
-  map(async (idList: string[]): Promise<IEnsRegistration[]> => {
-    return getProfilePickList(idList)
-  }),
-)
+// export const getEnsProfileListPick = O(
+//   map(async (idList: string[]): Promise<IEnsRegistration[]> => {
+//     return getProfilePickList(idList)
+//   }),
+// )
 
 export const getGmxIoPricefeed = O(
   map(async (queryParams: IRequestPricefeedApi): Promise<IPricefeed[]> => {
@@ -485,18 +491,22 @@ export async function getCompetitionTradeIncreases(
               sizeInTokens
               sizeDeltaUsd
               collateralAmount
+              collateralTokenPriceMax
+              priceImpactUsd
               isLong
               blockNumber
               blockTimestamp
               transactionHash
               logIndex
+              sizeDeltaUsd
+              __typename
                 }
             }
         `),
           {},
         )
 
-        return res.positionIncreases
+        return res.positionIncreases as IPositionV2[]
       },
     )
 
@@ -515,24 +525,90 @@ export async function getCompetitionTradeIncreases(
               sizeInTokens
               sizeDeltaUsd
               collateralAmount
+              collateralTokenPriceMax
+              priceImpactUsd
               isLong
               blockNumber
               blockTimestamp
               transactionHash
               logIndex
+              sizeDeltaUsd
+              __typename
                 }
             }
         `),
           {},
         )
 
-        return res.positionDecreases
+        return res.positionDecreases as IPositionV2[]
       },
     )
+
+    //@ts-ignore
     return positionIncreases.concat(positionDecreases)
   } catch (e) {
     console.log({ e })
   }
+}
+
+export async function getGMXPositions(
+  time: number,
+  accounts: string[],
+): Promise<
+  {
+    id: string
+    closedCount: number
+    cumsumCollateral: string
+    cumsumSize: string
+    losses: number
+    maxCapital: string
+    realizedPriceImpact: string
+    sumMaxSize: string
+    netCapital: string
+    realizedFees: string
+    realizedPnl: string
+    volume: string
+    wins: number
+    startUnrealizedPnl: string
+    startUnrealizedFees: string
+    startUnrealizedPriceImpact: string
+    __typename: string
+  }[]
+> {
+  const positions = await gmxGraph(
+    gql(`
+      query PeriodAccountStats($requiredMaxCapital: String, $from: Int, $to: Int) {
+  all: periodAccountStats(
+    limit: 100000
+    where: {maxCapital_gte: $requiredMaxCapital, from: $from, to: $to}
+  ) {
+    id
+    closedCount
+    cumsumCollateral
+    cumsumSize
+    losses
+    maxCapital
+    realizedPriceImpact
+    sumMaxSize
+    netCapital
+    realizedFees
+    realizedPnl
+    volume
+    wins
+    startUnrealizedPnl
+    startUnrealizedFees
+    startUnrealizedPriceImpact
+    __typename
+  }
+}
+    `),
+    {
+      from: time,
+      requiredMaxCapital: '500000000000000000000000000000000',
+    },
+  )
+
+  return positions.all.filter((el) => accounts.includes(el.id.toLowerCase()))
 }
 
 const increasePositionFields = `

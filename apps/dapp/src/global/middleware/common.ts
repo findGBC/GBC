@@ -91,7 +91,7 @@ export function getCompetitionSchedule(
   const competitionMonth = date.getUTCMonth()
 
   const start = Date.UTC(competitionYear, competitionMonth) / 1000
-  const duration = intervalTimeMap.HR24 * 27 + intervalTimeMap.MIN60 * 16
+  const duration = intervalTimeMap.HR24 * 25 + intervalTimeMap.MIN60 * 16
   const end = start + duration
 
   const elapsed = Math.min(unixTime, end) - start
@@ -119,7 +119,7 @@ export function getCompetitionMetrics(
 
 const MIN_PNL_THRESHOLD = USD_PERCISION * 1n
 
-export function isWinner(summary: IAccountSummaryV2) {
+export function isWinner(summary: { pnl: bigint }) {
   return summary.pnl > MIN_PNL_THRESHOLD
 }
 

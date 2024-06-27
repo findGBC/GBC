@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { gmxSubgraph } from '../global/gmx-middleware'
-import { div, toAccountSummaryListV2 } from '../global/gmx-middleware/gmxUtils'
+import { div } from '../global/gmx-middleware/gmxUtils'
 import { groupByMapMany } from '../global/gmx-middleware/utils'
 import type { IBlueberryLadder, IRequestCompetitionLadderApi } from '../global/middleware'
 import {
@@ -23,21 +23,22 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
 
   const accounts = tradeList ? groupByMapMany(tradeList, (t) => t.account) : []
 
-  const priceMap = await gmxSubgraph.getPriceMapV2(queryParams.to, queryParams)
-  const updatedPrices = await fetch('https://arbitrum-api.gmxinfra2.io/prices/tickers').then(
-    (res) => res.json(),
-  )
-  const incr = await gmxSubgraph.getCompetitionTradeIncreases(queryParams, Object.keys(accounts))
-  const incrSize = incr
-    ? incr.reduce((seed: bigint, next: any) => {
-        seed += BigInt(next.sizeDeltaUsd)
-        return seed
-      }, 0n)
-    : 0n
+  const positions = await gmxSubgraph.getGMXPositions(queryParams.from, Object.keys(accounts))
 
-  const summaryList = toAccountSummaryListV2(tradeList, priceMap, updatedPrices)
-
-  const { size, activeWinnerCount, totalMaxCollateral } = summaryList.reduce(
+  const temp = positions.map((el) => {
+    return {
+      account: el.id,
+      cumCollateral: el.cumsumCollateral,
+      cumSize: BigInt(el.cumsumSize),
+      lossCount: el.losses,
+      maxCollateral: BigInt(el.sumMaxSize),
+      openPnl: BigInt(el.startUnrealizedPnl),
+      pnl: BigInt(el.realizedPnl) - BigInt(el.startUnrealizedPnl) - BigInt(el.realizedFees),
+      realisedPnl: BigInt(el.realizedPnl),
+      winCount: el.wins,
+    }
+  })
+  const { size, activeWinnerCount, totalMaxCollateral } = temp.reduce(
     (seed, next) => {
       const roi = div(next.pnl, next.maxCollateral)
 
@@ -66,9 +67,9 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
   )
   const averageMaxCollateral = totalMaxCollateral ? totalMaxCollateral / activeWinnerCount : 0n
 
-  const metrics = getCompetitionMetrics(incrSize, queryParams.schedule)
+  const metrics = getCompetitionMetrics(size, queryParams.schedule)
 
-  const totalScore = summaryList.reduce((s, n) => {
+  const totalScore = temp.reduce((s, n) => {
     const score =
       queryParams.metric === 'roi'
         ? div(
@@ -100,7 +101,7 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
         winCount: 0,
       }
     : null
-  const sortedCompetitionList: IBlueberryLadder[] = summaryList
+  const sortedCompetitionList: IBlueberryLadder[] = temp
     .map((summary) => {
       const maxCollateral =
         summary.maxCollateral > averageMaxCollateral ? summary.maxCollateral : averageMaxCollateral

@@ -268,6 +268,27 @@ export type ITradeV2 = {
     transactionHash: string
   }
 }
+export type IPositionV2 = {
+  id: string
+  link: string
+  account: string
+  market: string
+  collateralToken: string
+  transactionHash: string
+  blockNumber: string
+  blockTimestamp: string
+  realisedPnlUsd: string
+  sizeDeltaUsd: string
+  sizeInUsd: string
+  sizeInTokens: string
+  collateralAmount: string
+  collateralTokenPriceMax: string
+  priceImpactUsd: string
+  referralMember: boolean
+  isLong: boolean
+  logIndex: string
+  __typename: string
+}
 
 export interface IStake extends IndexedType<'Stake'> {
   id: string

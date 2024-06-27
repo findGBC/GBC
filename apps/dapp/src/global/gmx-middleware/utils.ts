@@ -23,12 +23,12 @@ import { createClient } from '@urql/core'
 import { ethers } from 'ethers'
 
 import type { CHAIN } from '../middleware'
-import { NETWORK_METADATA, EXPLORER_URL } from '../middleware'
+import { EXPLORER_URL, NETWORK_METADATA } from '../middleware'
 import { ARBITRUM_ADDRESS } from '../middleware/address/arbitrum'
 
 import type { intervalTimeMap } from './constant'
 import { USD_DECIMALS } from './constant'
-import type { IResponsePageApi, IRequestPagePositionApi, IRequestSortApi } from './types'
+import type { IRequestPagePositionApi, IRequestSortApi, IResponsePageApi } from './types'
 
 export const ETH_ADDRESS_REGEXP = /^0x[a-fA-F0-9]{40}$/i
 export const TX_HASH_REGEX = /^0x([A-Fa-f0-9]{64})$/i
