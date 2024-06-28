@@ -153,7 +153,7 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
                 0,
             )
             const prizeUsd = (metrics.feePool * x.score) / totalScore
-            const tokenAmount = formatFixed(getTokenAmount(prizeUsd, ethPrice, 1), 18)
+            const tokenAmount = formatFixed(getTokenAmount(prizeUsd, ethPrice, 1), 19)
             return `erc20,${nativeToken},${x.account},${readableNumber(tokenAmount)},`
           })
           .join('\n'),
