@@ -34,8 +34,8 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
       lossCount: el.losses,
       maxCollateral: BigInt(el.maxCapital),
       openPnl: BigInt(el.startUnrealizedPnl),
-      // pnl: BigInt(el.realizedPnl) - BigInt(el.startUnrealizedPnl) - BigInt(el.realizedFees),
-      pnl: BigInt(el.realizedPnl) - BigInt(el.netCapital),
+      pnl: BigInt(el.realizedPnl) - BigInt(el.startUnrealizedPnl) - BigInt(el.realizedFees),
+      // pnl: BigInt(el.realizedPnl) - BigInt(el.netCapital),
       realisedPnl: BigInt(el.realizedPnl),
       winCount: el.wins,
     }
