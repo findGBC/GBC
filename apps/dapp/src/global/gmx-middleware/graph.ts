@@ -50,6 +50,12 @@ export const arbitrumGraphV2 = createSubgraphClient({
   url: 'https://api.studio.thegraph.com/query/36314/gmx-blueberry-club/version/latest',
 })
 
+export const gmxReferrals = createSubgraphClient({
+  exchanges: [cacheExchange, fetchExchange],
+  fetch: fetch as any,
+  url: 'https://subgraph.satsuma-prod.com/3b2ced13c8d9/gmx/gmx-arbitrum-referrals/api',
+})
+
 export const gmxGraph = createSubgraphClient({
   exchanges: [cacheExchange, fetchExchange],
   fetch: fetch as any,
@@ -609,6 +615,61 @@ export async function getGMXPositions(
   )
 
   return positions.all.filter((el) => accounts.includes(el.id.toLowerCase()))
+}
+
+export async function getGMXReferrals(time: number) {
+  const refs = await gmxReferrals(
+    gql(`
+      {
+    affiliateStats(
+        first: 1000
+        orderBy: timestamp
+        orderDirection: asc
+        where: {
+            period: daily
+            referralCode: "0x424c554542455252590000000000000000000000000000000000000000000000"
+            timestamp_gte: "${time}"
+        }
+        subgraphError: allow
+    ) {
+        timestamp
+        affiliate
+        referralCode
+        volume
+        trades
+        tradedReferralsCount
+        registeredReferralsCount
+        totalRebateUsd
+        discountUsd
+        registeredReferrals {
+            referral
+            __typename
+        }
+        v1Data {
+            volume
+            trades
+            totalRebateUsd
+            discountUsd
+            __typename
+        }
+        v2Data {
+            volume
+            trades
+            totalRebateUsd
+            discountUsd
+            __typename
+        }
+        __typename
+    }
+}
+
+    `),
+    {},
+  )
+
+  return refs.affiliateStats.reduce((acc, el) => {
+    return acc + BigInt(el.v2Data.volume)
+  }, 0n)
 }
 
 const increasePositionFields = `

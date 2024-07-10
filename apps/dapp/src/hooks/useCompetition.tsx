@@ -24,6 +24,7 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
   const accounts = tradeList ? groupByMapMany(tradeList, (t) => t.account) : []
 
   const positions = await gmxSubgraph.getGMXPositions(queryParams.from, Object.keys(accounts))
+  const refs = await gmxSubgraph.getGMXReferrals(queryParams.from)
 
   const temp = positions.map((el) => {
     return {
@@ -33,7 +34,8 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
       lossCount: el.losses,
       maxCollateral: BigInt(el.maxCapital),
       openPnl: BigInt(el.startUnrealizedPnl),
-      pnl: BigInt(el.realizedPnl) - BigInt(el.startUnrealizedPnl) - BigInt(el.realizedFees),
+      // pnl: BigInt(el.realizedPnl) - BigInt(el.startUnrealizedPnl) - BigInt(el.realizedFees),
+      pnl: BigInt(el.realizedPnl) - BigInt(el.netCapital),
       realisedPnl: BigInt(el.realizedPnl),
       winCount: el.wins,
     }
@@ -67,7 +69,7 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
   )
   const averageMaxCollateral = totalMaxCollateral ? totalMaxCollateral / activeWinnerCount : 0n
 
-  const metrics = getCompetitionMetrics(size, queryParams.schedule)
+  const metrics = getCompetitionMetrics(refs, queryParams.schedule)
 
   const totalScore = temp.reduce((s, n) => {
     const score =
