@@ -610,7 +610,6 @@ export async function getGMXPositions(
     `),
     {
       from: time,
-      requiredMaxCapital: '500000000000000000000000000000000',
     },
   )
 

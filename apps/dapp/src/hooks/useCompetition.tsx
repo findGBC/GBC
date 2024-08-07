@@ -20,8 +20,7 @@ const MIN_ROI = 150n // 1.5%
 
 const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
   const tradeList = await gmxSubgraph.getCompetitionTrades(queryParams)
-
-  const accounts = tradeList ? groupByMapMany(tradeList, (t) => t.account) : []
+  const accounts = tradeList ? groupByMapMany(tradeList, (t) => t.account.toLowerCase()) : []
 
   const positions = await gmxSubgraph.getGMXPositions(queryParams.from, Object.keys(accounts))
   const refs = await gmxSubgraph.getGMXReferrals(queryParams.from)
