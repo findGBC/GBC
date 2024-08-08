@@ -40,7 +40,7 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
       avgCollateral: el.cumsumCollateral,
       cumSize: BigInt(el.cumsumSize),
       lossCount: el.losses,
-      maxCollateral: BigInt(el.maxCapital),
+      maxCollateral: BigInt(el.realizedFees),
       openPnl: BigInt(el.startUnrealizedPnl),
       pnl: BigInt(el.realizedPnl) - BigInt(el.startUnrealizedPnl) - BigInt(el.realizedFees),
       // pnl: BigInt(el.realizedPnl) - BigInt(el.netCapital),
@@ -114,10 +114,17 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
   const sortedCompetitionList: IBlueberryLadder[] = traders
     .map((summary) => {
       const maxCollateral =
-        summary.maxCollateral > averageMaxCollateral ? summary.maxCollateral : averageMaxCollateral
-      const score =
-        queryParams.metric === 'roi' ? div(summary.pnl, maxCollateral) : summary[queryParams.metric]
+        summary.maxCollateral > 0n ? summary.maxCollateral : averageMaxCollateral
 
+      const score =
+        queryParams.metric === 'roi'
+          ? (summary.pnl / maxCollateral) * 100n
+          : summary[queryParams.metric]
+      // if (
+      //   summary.account.toLowerCase() === '0x952B2c26A99b938F93E83F2B79a128f969575A6A'.toLowerCase()
+      // ) {
+      //   console.log(score, summary)
+      // }
       return {
         score,
         summary,
