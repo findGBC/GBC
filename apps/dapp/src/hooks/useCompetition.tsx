@@ -80,13 +80,9 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
   const metrics = getCompetitionMetrics(refs, queryParams.schedule)
 
   const totalScore = traders.reduce((s, n) => {
+    const maxCollateral = n.maxCollateral > 0n ? n.maxCollateral : averageMaxCollateral
     const score =
-      queryParams.metric === 'roi'
-        ? div(
-            n.pnl,
-            n.maxCollateral > averageMaxCollateral ? n.maxCollateral : averageMaxCollateral,
-          )
-        : n[queryParams.metric]
+      queryParams.metric === 'roi' ? (n.pnl / maxCollateral) * 100n : n[queryParams.metric]
 
     return score > 0n ? s + score : s
   }, 1n)
