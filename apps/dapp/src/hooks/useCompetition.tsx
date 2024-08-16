@@ -43,8 +43,11 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
       maxCollateral: BigInt(el.realizedFees),
       openPnl: BigInt(el.startUnrealizedPnl),
       pnl: BigInt(el.realizedPnl) - BigInt(el.startUnrealizedPnl) - BigInt(el.realizedFees),
+
       // pnl: BigInt(el.realizedPnl) - BigInt(el.netCapital),
       realisedPnl: BigInt(el.realizedPnl),
+
+      trader: el,
       winCount: el.wins,
     }
   })
@@ -80,12 +83,14 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
   const metrics = getCompetitionMetrics(refs, queryParams.schedule)
 
   const totalScore = traders.reduce((s, n) => {
-    const maxCollateral = n.maxCollateral > 0n ? n.maxCollateral : averageMaxCollateral
     const score =
-      queryParams.metric === 'roi' ? (n.pnl / maxCollateral) * 100n : n[queryParams.metric]
+      queryParams.metric === 'roi'
+        ? (BigInt(n.trader.realizedPnl) * 10000n) / BigInt(n.trader.maxCapital)
+        : n[queryParams.metric]
 
     return score > 0n ? s + score : s
   }, 1n)
+
   const connectedProfile: null | IBlueberryLadder = queryParams.account
     ? {
         account: queryParams.account,
@@ -109,18 +114,11 @@ const getCumulative = async (queryParams: IRequestCompetitionLadderApi) => {
     : null
   const sortedCompetitionList: IBlueberryLadder[] = traders
     .map((summary) => {
-      const maxCollateral =
-        summary.maxCollateral > 0n ? summary.maxCollateral : averageMaxCollateral
-
       const score =
         queryParams.metric === 'roi'
-          ? (summary.pnl / maxCollateral) * 100n
+          ? (BigInt(summary.trader.realizedPnl) * 10000n) / BigInt(summary.trader.maxCapital)
           : summary[queryParams.metric]
-      // if (
-      //   summary.account.toLowerCase() === '0x952B2c26A99b938F93E83F2B79a128f969575A6A'.toLowerCase()
-      // ) {
-      //   console.log(score, summary)
-      // }
+
       return {
         score,
         summary,
