@@ -64,7 +64,7 @@ export default async function userHandler(
 
       const arbOptions = {
         method: 'GET',
-        url: `https://qa-api.pulsar.finance/v1/thirdparty/wallet/${process.env.ARBITRUM_GBC_TREASURY_ADDRESS}/timeseries?chain=${ChainKeys.ARBITRUM}&tier=1d`,
+        url: `https://api.pulsar.finance/v1/thirdparty/wallet/${process.env.ARBITRUM_GBC_TREASURY_ADDRESS}/timeseries?chain=${ChainKeys.ARBITRUM}&tier=1d`,
         headers: {
           accept: 'application/json',
           authorization: `Bearer ${process.env.PULSAR_API_KEY}`
@@ -73,7 +73,7 @@ export default async function userHandler(
 
       const avalancheOptions = {
         method: 'GET',
-        url: `https://qa-api.pulsar.finance/v1/thirdparty/wallet/${process.env.AVALANCHE_GBC_TREASURY_ADDRESS}/timeseries?chain=${ChainKeys.AVALANCHE}&tier=1d`,
+        url: `https://api.pulsar.finance/v1/thirdparty/wallet/${process.env.AVALANCHE_GBC_TREASURY_ADDRESS}/timeseries?chain=${ChainKeys.AVALANCHE}&tier=1d`,
         headers: {
           accept: 'application/json',
           authorization: `Bearer ${process.env.PULSAR_API_KEY}`
