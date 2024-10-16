@@ -32,16 +32,8 @@ const CommunityProposal: React.FC = () => {
             </div>
 
             <div className="flex gap-2 my-4">
-              <Button btnType={ButtonType.Primary} url="/dao">
+              <Button btnType={ButtonType.Primary} url={Constants.URL.GBC_DAO}>
                 {LL.COMMUNITY.VIEW_PROPOSAL()}
-              </Button>
-              <Button
-                btnType={ButtonType.Ghost}
-                className="border"
-                url={Constants.URL.GBC_FORUM}
-                border={true}
-              >
-                {LL.COMMUNITY.DISCUSSIONS()}
               </Button>
             </div>
           </div>

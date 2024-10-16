@@ -19,14 +19,11 @@ const Footer = () => {
           </Link>
         </div>
         <div className="md:place-self-center md:justify-self-center block">
-          <Button btnType={ButtonType.Ghost} url="/apps">
-            {LL.SHARED.APPS()}
+          <Button btnType={ButtonType.Ghost} url="/ecosystem">
+            {LL.SHARED.ECOSYSTEM()}
           </Button>
           <Button btnType={ButtonType.Ghost} url={Constants.URL.GBC_DOC}>
             {LL.SHARED.DOCUMENTATION()}
-          </Button>
-          <Button btnType={ButtonType.Ghost} url={Constants.URL.GITHUB}>
-            {LL.SHARED.GITHUB()}
           </Button>
         </div>
         <div className="md:mr-12 md:place-self-center md:justify-self-end grid grid-flow-col gap-4">

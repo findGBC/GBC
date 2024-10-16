@@ -17,8 +17,7 @@ import TreasuryButton from '../TreasuryButton/TreasuryButton'
 
 const navigation = [
   { href: '/ecosystem', name: 'GBC Hub', url: ecosystemIcon },
-  { href: '/dao', name: 'Dao', url: daoIcon },
-  { href: Constants.URL.GBC_FORUM, name: 'Forum', url: forumIcom },
+  { href: Constants.URL.GBC_DAO, name: 'Dao', url: daoIcon },
   { href: Constants.URL.GBC_DOC, name: 'Docs', url: docsIcon },
   {
     href: '/blog',
@@ -66,7 +65,7 @@ const LaunchApp = ({ className }: LaunchAppProps) => {
       className={className}
       url={Constants.URL.GBC_APP}
     >
-      Launch app
+      Enter World
     </Button>
   )
 }
@@ -76,7 +75,6 @@ export function SecondaryNavbar() {
     <div className="md:flex md:mr-12 items-center hidden space-x-3">
       <TreasuryButton></TreasuryButton>
       <LaunchApp />
-      <LightToggle />
     </div>
   )
 }
@@ -144,7 +142,7 @@ function MobileMenu({ isOpen }: MobileMenuProps) {
             className="btn-primary text-primary-content"
             name={'LaunchApp'}
           >
-            Launch App
+            Enter World
           </NavItem>
         </div>
       </div>

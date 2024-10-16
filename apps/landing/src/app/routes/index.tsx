@@ -6,7 +6,6 @@ import LayoutMain from '../../layouts/layout'
 const Homepage = lazy(() => import('../../pages/Homepage/Homepage'))
 const Ecosystem = lazy(() => import('../../pages/Ecosystem/Ecosystem'))
 const Treasury = lazy(() => import('../../pages/Treasury/Treasury'))
-const Dao = lazy(() => import('../../pages/Dao/Dao'))
 const Blog = lazy(() => import('../../pages/Blog/Blog'))
 const BlogPost = lazy(() => import('../../pages/Blog/BlogPost'))
 
@@ -39,16 +38,6 @@ const GbcRoutes = () => {
           element={
             <Suspense fallback={null}>
               <Treasury />
-            </Suspense>
-          }
-        />
-      </Route>
-      <Route path="/dao" element={<LayoutMain />}>
-        <Route
-          index
-          element={
-            <Suspense fallback={null}>
-              <Dao />
             </Suspense>
           }
         />
