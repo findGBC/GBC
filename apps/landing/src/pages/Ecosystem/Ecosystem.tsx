@@ -45,11 +45,11 @@ const Ecosystem: React.FC = () => {
                 {LL.ECOSYSTEM.TRADE()}
               </Card>
               <Card
-                title="Puppet Mirror Trading"
+                title="GBC Camp"
                 img={puppet}
-                route={Constants.URL.PUPPET}
+                route={'#'}
               >
-                {LL.APPS.PUPPET.TEXT()}
+                {LL.APPS.GBC_CAMP.TEXT()}
               </Card>
               <Card
                 title="Blueberry Pulse"
@@ -57,13 +57,6 @@ const Ecosystem: React.FC = () => {
                 route={Constants.URL.PULSE}
               >
                 {LL.ECOSYSTEM.PULSE()}
-              </Card>
-              <Card
-                title="The Blueberry Podcast"
-                img={podcast}
-                route={Constants.URL.SPOTIFY}
-              >
-                {LL.ECOSYSTEM.PODCAST()}
               </Card>
             </div>
           </div>

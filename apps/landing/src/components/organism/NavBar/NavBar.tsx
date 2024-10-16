@@ -16,7 +16,7 @@ import { LightToggle, Logo, NavItem } from '../../mollecules'
 import TreasuryButton from '../TreasuryButton/TreasuryButton'
 
 const navigation = [
-  { href: '/ecosystem', name: 'GBC Hub', url: ecosystemIcon },
+  { href: '/ecosystem', name: 'Ecosystem', url: ecosystemIcon },
   { href: Constants.URL.GBC_DAO, name: 'Dao', url: daoIcon },
   { href: Constants.URL.GBC_DOC, name: 'Docs', url: docsIcon },
   {

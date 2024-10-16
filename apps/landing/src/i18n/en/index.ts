@@ -2,9 +2,9 @@ import type { BaseTranslation } from '../i18n-types'
 
 const en: BaseTranslation = {
   APPS: {
-    PUPPET: {
-      TEXT: 'Copy top traders on a single deposit, manage them in your portfolio, earn $PUPPET rewards or Trade to earn extra from profits from being copied, win weekly prize pools, earn PUPPET',
-      TITLE: 'Puppet - Matching top Traders with Investors',
+    GBC_CAMP: {
+      TITLE: 'GBC CAMP',
+      TEXT: 'An all-in-one guide that allows you to learn and earn rewards in the GBC ecosystem'
     },
     TRADING: {
       TEXT: 'Monthly trading face-offs. Square off with fellow members and snag those hefty cash rewards.',
@@ -43,7 +43,7 @@ const en: BaseTranslation = {
       'The bi-weekly podcast features topics chosen by the Blueberry community. Hosted by Tano & GMX Intern.',
     PULSE:
       'Weekly Newsletter to keep the community informed about the latest news on GMX and the Blueberry Club.',
-    TITLE: 'GBC Hub',
+    TITLE: 'Ecosystem',
     TRADE:
       'Monthly trade-offs: Clash with the community. Grab those juicy cash rewards.',
   },
