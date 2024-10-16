@@ -15,13 +15,13 @@ export type Translations = RootTranslation
 
 type RootTranslation = {
 	APPS: {
-		PUPPET: {
+		GBC_CAMP: {
 			/**
-			 * C​o​p​y​ ​t​o​p​ ​t​r​a​d​e​r​s​ ​o​n​ ​a​ ​s​i​n​g​l​e​ ​d​e​p​o​s​i​t​,​ ​m​a​n​a​g​e​ ​t​h​e​m​ ​i​n​ ​y​o​u​r​ ​p​o​r​t​f​o​l​i​o​,​ ​e​a​r​n​ ​$​P​U​P​P​E​T​ ​r​e​w​a​r​d​s​ ​o​r​ ​T​r​a​d​e​ ​t​o​ ​e​a​r​n​ ​e​x​t​r​a​ ​f​r​o​m​ ​p​r​o​f​i​t​s​ ​f​r​o​m​ ​b​e​i​n​g​ ​c​o​p​i​e​d​,​ ​w​i​n​ ​w​e​e​k​l​y​ ​p​r​i​z​e​ ​p​o​o​l​s​,​ ​e​a​r​n​ ​P​U​P​P​E​T
+			 * A​n​ ​a​l​l​-​i​n​-​o​n​e​ ​g​u​i​d​e​ ​t​h​a​t​ ​a​l​l​o​w​s​ ​y​o​u​ ​t​o​ ​l​e​a​r​n​ ​a​n​d​ ​e​a​r​n​ ​r​e​w​a​r​d​s​ ​i​n​ ​t​h​e​ ​G​B​C​ ​e​c​o​s​y​s​t​e​m
 			 */
 			TEXT: string
 			/**
-			 * P​u​p​p​e​t​ ​-​ ​M​a​t​c​h​i​n​g​ ​t​o​p​ ​T​r​a​d​e​r​s​ ​w​i​t​h​ ​I​n​v​e​s​t​o​r​s
+			 * G​B​C​ ​C​A​M​P
 			 */
 			TITLE: string
 		}
@@ -122,7 +122,7 @@ type RootTranslation = {
 		 */
 		PULSE: string
 		/**
-		 * G​B​C​ ​H​u​b
+		 * E​c​o​s​y​s​t​e​m
 		 */
 		TITLE: string
 		/**
@@ -162,10 +162,6 @@ type RootTranslation = {
 	}
 	SHARED: {
 		/**
-		 * A​p​p​s
-		 */
-		APPS: string
-		/**
 		 * A​s​s​e​t​s
 		 */
 		ASSETS: string
@@ -186,13 +182,13 @@ type RootTranslation = {
 		 */
 		DISCOVER: string
 		/**
-		 * H​o​m​e
-		 */
-		HOME: string
-		/**
 		 * D​o​c​u​m​e​n​t​a​t​i​o​n
 		 */
 		DOCUMENTATION: string
+		/**
+		 * E​c​o​s​y​s​t​e​m
+		 */
+		ECOSYSTEM: string
 		/**
 		 * E​n​d
 		 */
@@ -206,7 +202,11 @@ type RootTranslation = {
 		 */
 		GITHUB: string
 		/**
-		 * J​o​i​n​ ​t​h​e​ ​c​l​u​b
+		 * H​o​m​e
+		 */
+		HOME: string
+		/**
+		 * E​n​t​e​r​ ​W​o​r​l​d
 		 */
 		JOIN_CLUB: string
 		/**
@@ -218,7 +218,7 @@ type RootTranslation = {
 		 */
 		PRICE: string
 		/**
-		 * R​e​a​d​ ​d​o​c​u​m​e​n​t​a​t​i​o​n
+		 * L​e​a​r​n​ ​m​o​r​e
 		 */
 		READ_DOC: string
 		/**
@@ -240,16 +240,16 @@ type RootTranslation = {
 	}
 	TEAM: {
 		/**
-		 * {​j​o​b​|​{​*​:​ ​T​e​a​m​ ​M​e​m​b​e​r​,​ ​c​o​f​o​u​n​d​e​r​:​ ​C​o​-​F​o​u​n​d​e​r​,​ ​c​e​o​:​ ​C​E​O​,​ ​a​d​v​i​s​o​r​:​ ​A​d​v​i​s​o​r​,​ ​d​e​v​:​ ​D​e​v​e​l​o​p​e​r​,​ ​c​o​o​:​ ​C​O​O​,​ ​c​m​o​:​ ​C​M​O​,​ ​c​m​:​ ​C​o​m​m​u​n​i​t​y​ ​M​a​n​a​g​e​r​,​ ​g​m​x​:​ ​G​M​X​ ​F​o​u​n​d​e​r​,​ ​g​i​f​:​ ​G​i​f​ ​M​a​k​e​r​}​}
-		 * @param {string | 'cofounder' | 'ceo' | 'advisor' | 'dev' | 'coo' | 'cmo' | 'cm' | 'gmx' | 'gif'} job
+		 * {​j​o​b​|​{​*​:​ ​T​e​a​m​ ​M​e​m​b​e​r​,​ ​c​o​f​o​u​n​d​e​r​:​ ​C​o​-​F​o​u​n​d​e​r​,​ ​c​e​o​:​ ​C​E​O​,​ ​a​d​v​i​s​o​r​:​ ​A​d​v​i​s​o​r​,​ ​d​e​v​:​ ​D​e​v​e​l​o​p​e​r​,​ ​c​o​o​:​ ​C​O​O​,​ ​c​m​o​:​ ​C​M​O​,​ ​c​m​:​ ​C​o​m​m​u​n​i​t​y​ ​M​a​n​a​g​e​r​,​ ​g​m​x​:​ ​G​M​X​ ​F​o​u​n​d​e​r​,​ ​g​i​f​:​ ​G​i​f​ ​M​a​k​e​r​,​ ​c​w​:​ ​C​o​p​y​w​r​i​t​e​r​,​ ​a​n​a​l​y​s​t​:​ ​A​n​a​l​y​s​t​}​}
+		 * @param {string | 'cofounder' | 'ceo' | 'advisor' | 'dev' | 'coo' | 'cmo' | 'cm' | 'gmx' | 'gif' | 'cw' | 'analyst'} job
 		 */
-		JOB: RequiredParams<`job|{*:${string}, cofounder:${string}, ceo:${string}, advisor:${string}, dev:${string}, coo:${string}, cmo:${string}, cm:${string}, gmx:${string}, gif:${string}}`>
+		JOB: RequiredParams<`job|{*:${string}, cofounder:${string}, ceo:${string}, advisor:${string}, dev:${string}, coo:${string}, cmo:${string}, cm:${string}, gmx:${string}, gif:${string}, cw:${string}, analyst:${string}}`>
 		/**
 		 * W​h​i​l​e​ ​G​B​C​ ​t​h​r​i​v​e​s​ ​o​n​ ​c​o​m​m​u​n​i​t​y​-​d​r​i​v​e​n​ ​D​A​O​ ​d​e​c​i​s​i​o​n​s​,​ ​w​e​ ​h​a​v​e​ ​a​ ​d​e​d​i​c​a​t​e​d​ ​t​e​a​m​ ​f​i​n​e​-​t​u​n​i​n​g​ ​o​u​r​ ​p​r​o​j​e​c​t​'​s​ ​e​x​e​c​u​t​i​o​n​.​ ​T​h​e​y​ ​b​r​i​d​g​e​ ​t​h​e​ ​D​A​O​'​s​ ​v​i​s​i​o​n​ ​w​i​t​h​ ​t​h​e​ ​e​x​p​e​r​t​i​s​e​ ​n​e​e​d​e​d​ ​f​o​r​ ​t​a​n​g​i​b​l​e​ ​s​u​c​c​e​s​s​.​ ​M​e​e​t​ ​t​h​e​ ​m​i​n​d​s​ ​b​e​h​i​n​d​ ​t​h​e​ ​m​o​v​e​m​e​n​t​.
 		 */
 		TEXT: string
 		/**
-		 * M​e​e​t​ ​t​h​e​ ​T​e​a​m
+		 * M​e​e​t​ ​t​h​e​ ​T​e​a​m​ ​a​n​d​ ​C​o​n​t​r​i​b​u​t​o​r​s
 		 */
 		TITLE: string
 	}
@@ -284,13 +284,13 @@ type RootTranslation = {
 
 export type TranslationFunctions = {
 	APPS: {
-		PUPPET: {
+		GBC_CAMP: {
 			/**
-			 * Copy top traders on a single deposit, manage them in your portfolio, earn $PUPPET rewards or Trade to earn extra from profits from being copied, win weekly prize pools, earn PUPPET
+			 * An all-in-one guide that allows you to learn and earn rewards in the GBC ecosystem
 			 */
 			TEXT: () => LocalizedString
 			/**
-			 * Puppet - Matching top Traders with Investors
+			 * GBC CAMP
 			 */
 			TITLE: () => LocalizedString
 		}
@@ -390,7 +390,7 @@ export type TranslationFunctions = {
 		 */
 		PULSE: () => LocalizedString
 		/**
-		 * GBC Hub
+		 * Ecosystem
 		 */
 		TITLE: () => LocalizedString
 		/**
@@ -430,10 +430,6 @@ export type TranslationFunctions = {
 	}
 	SHARED: {
 		/**
-		 * Apps
-		 */
-		APPS: () => LocalizedString
-		/**
 		 * Assets
 		 */
 		ASSETS: () => LocalizedString
@@ -454,13 +450,13 @@ export type TranslationFunctions = {
 		 */
 		DISCOVER: () => LocalizedString
 		/**
-		 * Home
-		 */
-		HOME: () => LocalizedString
-		/**
 		 * Documentation
 		 */
 		DOCUMENTATION: () => LocalizedString
+		/**
+		 * Ecosystem
+		 */
+		ECOSYSTEM: () => LocalizedString
 		/**
 		 * End
 		 */
@@ -474,7 +470,11 @@ export type TranslationFunctions = {
 		 */
 		GITHUB: () => LocalizedString
 		/**
-		 * Join the club
+		 * Home
+		 */
+		HOME: () => LocalizedString
+		/**
+		 * Enter World
 		 */
 		JOIN_CLUB: () => LocalizedString
 		/**
@@ -486,7 +486,7 @@ export type TranslationFunctions = {
 		 */
 		PRICE: () => LocalizedString
 		/**
-		 * Read documentation
+		 * Learn more
 		 */
 		READ_DOC: () => LocalizedString
 		/**
@@ -508,15 +508,15 @@ export type TranslationFunctions = {
 	}
 	TEAM: {
 		/**
-		 * {job|{*: Team Member, cofounder: Co-Founder, ceo: CEO, advisor: Advisor, dev: Developer, coo: COO, cmo: CMO, cm: Community Manager, gmx: GMX Founder, gif: Gif Maker}}
+		 * {job|{*: Team Member, cofounder: Co-Founder, ceo: CEO, advisor: Advisor, dev: Developer, coo: COO, cmo: CMO, cm: Community Manager, gmx: GMX Founder, gif: Gif Maker, cw: Copywriter, analyst: Analyst}}
 		 */
-		JOB: (arg: { job: string | 'cofounder' | 'ceo' | 'advisor' | 'dev' | 'coo' | 'cmo' | 'cm' | 'gmx' | 'gif' }) => LocalizedString
+		JOB: (arg: { job: string | 'cofounder' | 'ceo' | 'advisor' | 'dev' | 'coo' | 'cmo' | 'cm' | 'gmx' | 'gif' | 'cw' | 'analyst' }) => LocalizedString
 		/**
 		 * While GBC thrives on community-driven DAO decisions, we have a dedicated team fine-tuning our project's execution. They bridge the DAO's vision with the expertise needed for tangible success. Meet the minds behind the movement.
 		 */
 		TEXT: () => LocalizedString
 		/**
-		 * Meet the Team
+		 * Meet the Team and Contributors
 		 */
 		TITLE: () => LocalizedString
 	}

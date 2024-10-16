@@ -3,8 +3,8 @@ import type { BaseTranslation } from '../i18n-types'
 const en: BaseTranslation = {
   APPS: {
     GBC_CAMP: {
+      TEXT: 'An all-in-one guide that allows you to learn and earn rewards in the GBC ecosystem',
       TITLE: 'GBC CAMP',
-      TEXT: 'An all-in-one guide that allows you to learn and earn rewards in the GBC ecosystem'
     },
     TRADING: {
       TEXT: 'Monthly trading face-offs. Square off with fellow members and snag those hefty cash rewards.',
@@ -60,15 +60,15 @@ const en: BaseTranslation = {
   },
 
   SHARED: {
-    APPS: 'Apps',
     ASSETS: 'Assets',
     BALANCE: 'Balance',
     CHAIN: 'Chain',
     CHECK_TREASURY: 'Discover',
     DISCOVER: 'Discover',
     DOCUMENTATION: 'Documentation',
+    ECOSYSTEM: 'Ecosystem',
     END: 'End',
-    EXPLORE: 'Explore our Hub',
+    EXPLORE: 'Explore our Ecosystem',
     GITHUB: 'Github',
     HOME: 'Home',
     JOIN_CLUB: 'Enter World',

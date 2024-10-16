@@ -1,5 +1,4 @@
 export { default as NavItem } from './NavItem/NavItem'
-export { default as LightToggle } from './LightToggle/LightToggle'
 export { default as Loader } from './Loader/Loader'
 export { default as MultiLines } from './MultiLines/MultiLines'
 export { default as Slider } from './Slider/Slider'
