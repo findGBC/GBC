@@ -2,7 +2,7 @@ import type { Translation } from '../i18n-types'
 
 const fr: Translation = {
   APPS: {
-    PUPPET: {
+    GBC_CAMP: {
       TEXT: '',
       TITLE: '',
     },
@@ -52,13 +52,13 @@ const fr: Translation = {
     TITLE: '',
   },
   SHARED: {
-    APPS: '',
     ASSETS: '',
     BALANCE: '',
     CHAIN: '',
     CHECK_TREASURY: '',
     DISCOVER: '',
     DOCUMENTATION: '',
+    ECOSYSTEM: '',
     END: '',
     EXPLORE: '',
     GITHUB: '',

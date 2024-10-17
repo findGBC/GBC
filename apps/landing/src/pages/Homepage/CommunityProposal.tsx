@@ -1,6 +1,6 @@
 import React from 'react'
 
-import proposal from '../../assets/img/homepage/proposal.jpg'
+import communityled from '../../assets/img/homepage/communityled.jpg'
 import { Button } from '../../components/atoms'
 import Animate from '../../components/atoms/Animate/Animate'
 import Title from '../../components/atoms/Title/Title'
@@ -17,33 +17,24 @@ const CommunityProposal: React.FC = () => {
     <section>
       <Animate>
         <div className="md:px-40 flex flex-wrap">
-          <div className={`${colClassNames} md:order-first`}>
-            <img
-              className="rounded-2xl w-full"
-              src={proposal}
-              alt="Community Treasury"
-            />
-          </div>
-
           <div className={`${colClassNames} grid content-center`}>
             <Title value={LL.COMMUNITY.TITLE()}></Title>
             <div className="space-y-4">
-              {MultiLines({ text: LL.COMMUNITY.TEXT() })}
+              {MultiLines({text: LL.COMMUNITY.TEXT()})}
             </div>
 
             <div className="flex gap-2 my-4">
-              <Button btnType={ButtonType.Primary} url="/dao">
+              <Button btnType={ButtonType.Primary} url={Constants.URL.GBC_DAO}>
                 {LL.COMMUNITY.VIEW_PROPOSAL()}
               </Button>
-              <Button
-                btnType={ButtonType.Ghost}
-                className="border"
-                url={Constants.URL.GBC_FORUM}
-                border={true}
-              >
-                {LL.COMMUNITY.DISCUSSIONS()}
-              </Button>
             </div>
+          </div>
+          <div className={`${colClassNames}`}>
+            <img
+              className="rounded-2xl w-full"
+              src={communityled}
+              alt="Community Treasury"
+            />
           </div>
         </div>
       </Animate>

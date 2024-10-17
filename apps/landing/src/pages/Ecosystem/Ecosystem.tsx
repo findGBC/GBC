@@ -1,11 +1,10 @@
 import React from 'react'
 
-import lab from '../../assets/img/homepage/lab.png'
+import lab from '../../assets/img/homepage/lab.jpg'
 import nfts from '../../assets/img/homepage/nfts.png'
-import podcast from '../../assets/img/homepage/podcast.png'
-import pulse from '../../assets/img/homepage/pulse.png'
-import puppet from '../../assets/img/homepage/puppet.png'
-import trading from '../../assets/img/homepage/trading.png'
+import blueberrypulse from '../../assets/img/homepage/blueberrypulse.jpg'
+import gbccamp from '../../assets/img/homepage/gbccamp.jpg'
+import gbctrading from '../../assets/img/homepage/gbctrading.jpg'
 import { Animate } from '../../components/atoms'
 import PageTitle from '../../components/atoms/Title/PageTitle'
 import { Card } from '../../components/organism'
@@ -39,31 +38,24 @@ const Ecosystem: React.FC = () => {
               </Card>
               <Card
                 title="GBC Trading"
-                img={trading}
+                img={gbctrading}
                 route={Constants.URL.GBC_TRADING}
               >
                 {LL.ECOSYSTEM.TRADE()}
               </Card>
               <Card
-                title="Puppet Mirror Trading"
-                img={puppet}
-                route={Constants.URL.PUPPET}
+                title="GBC Camp"
+                img={gbccamp}
+                route={'#'}
               >
-                {LL.APPS.PUPPET.TEXT()}
+                {LL.APPS.GBC_CAMP.TEXT()}
               </Card>
               <Card
                 title="Blueberry Pulse"
-                img={pulse}
+                img={blueberrypulse}
                 route={Constants.URL.PULSE}
               >
                 {LL.ECOSYSTEM.PULSE()}
-              </Card>
-              <Card
-                title="The Blueberry Podcast"
-                img={podcast}
-                route={Constants.URL.SPOTIFY}
-              >
-                {LL.ECOSYSTEM.PODCAST()}
               </Card>
             </div>
           </div>

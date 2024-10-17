@@ -66,7 +66,8 @@ export const Constants = {
     SPOTIFY:
       'https://open.spotify.com/show/3GlhNSKDwwpUid4EBeQmlX?si=153bff92b20b4ba0',
     TWITTER: 'https://x.com/findGBC',
-    GBC_API: import.meta.env.VITE_GBC_API
+    GBC_API: import.meta.env.VITE_GBC_API,
+    GBC_DAO: 'https://snapshot.box/#/s:gbc-nft.eth'
   },
 }
 
@@ -80,73 +81,45 @@ export const TeamMembers: TeamMemberProps[] = [
   },
   {
     id: 2,
-    img: 'appodial',
-    jobs: [JobType.CoFounder, JobType.Advisor],
-    name: 'Appodial',
-    socialLink: 'https://twitter.com/yoannykp',
-  },
-  {
-    id: 3,
-    img: 'itburnz',
-    jobs: [JobType.CoFounder, JobType.Dev],
-    name: 'itburnz',
-    socialLink: 'https://twitter.com/itburnzz',
-  },
-  {
-    id: 4,
     img: 'feedthem',
     jobs: [JobType.COO],
     name: 'feedthem',
     socialLink: 'https://twitter.com/feedthemGBC',
   },
   {
-    id: 5,
+    id: 3,
     img: 'vee',
     jobs: [JobType.CMO],
     name: 'Vee',
     socialLink: 'https://twitter.com/vee_GBC',
   },
   {
-    id: 6,
-    img: 'monte',
-    jobs: [JobType.CM],
-    name: 'Monte',
-    socialLink: 'https://twitter.com/monte_xyz',
-  },
-  {
-    id: 7,
-    img: 'oda',
-    jobs: [JobType.Dev],
-    name: 'Oda',
-    socialLink: 'https://twitter.com/crypto_oda',
-  },
-  {
-    id: 8,
+    id: 4,
     img: 'cloud',
     jobs: [JobType.Gif],
     name: 'Cloud',
     socialLink: 'https://twitter.com/cloud_artto',
   },
   {
-    id: 9,
-    img: 'harry89pl',
-    jobs: [JobType.Dev],
-    name: 'Harry89PL',
-    socialLink: 'https://x.com/LukaszHarry',
+    id: 5,
+    img: 'itburnz',
+    jobs: [JobType.CoFounder],
+    name: 'itburnz',
+    socialLink: 'https://twitter.com/itburnzz',
   },
   {
-    id: 10,
+    id: 6,
     img: 'cowchain',
     jobs: [JobType.Dev],
     name: 'Dev team',
     socialLink: 'https://cowchain.io/',
   },
   {
-    id: 11,
-    img: 'tx',
-    jobs: [JobType.Copywriter, JobType.Analyst],
-    name: 'Tx',
-    socialLink: 'https://x.com/tx_analysor',
+    id: 7,
+    img: 'harry89pl',
+    jobs: [JobType.Dev],
+    name: 'Harry89PL',
+    socialLink: 'https://x.com/LukaszHarry',
   },
 ]
 

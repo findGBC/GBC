@@ -1,8 +1,8 @@
 import React from 'react'
 
-import lab from '../../assets/img/homepage/lab.png'
+import lab from '../../assets/img/homepage/lab.jpg'
 import nfts from '../../assets/img/homepage/nfts.png'
-import trading from '../../assets/img/homepage/trading.png'
+import gbctrading from '../../assets/img/homepage/gbctrading.jpg'
 import { Button, Title } from '../../components/atoms'
 import Animate from '../../components/atoms/Animate/Animate'
 import { Card } from '../../components/organism'
@@ -27,7 +27,7 @@ const EcosystemProducts: React.FC = () => {
             </Card>
             <Card
               title="GBC Trading"
-              img={trading}
+              img={gbctrading}
               route={Constants.URL.GBC_TRADING}
             >
               {LL.ECOSYSTEM.TRADE()}

@@ -5,20 +5,19 @@ import { useLocation } from 'react-router-dom'
 
 import daoIcon from '../../../assets/img/nav/dao_icon.svg'
 import docsIcon from '../../../assets/img/nav/doc_icon.svg'
-import forumIcom from '../../../assets/img/nav/forum_icon.svg'
 import ecosystemIcon from '../../../assets/img/nav/GBC_icon.svg'
 import newsIcon from '../../../assets/img/nav/hub_icon.svg'
 import clubIcon from '../../../assets/img/nav/opensea_icon.svg'
 import { Constants } from '../../../global/constant'
 import { ButtonType } from '../../../global/enum'
+import { useI18nContext } from '../../../i18n/i18n-react'
 import { Button } from '../../atoms'
-import { LightToggle, Logo, NavItem } from '../../mollecules'
+import { Logo, NavItem } from '../../mollecules'
 import TreasuryButton from '../TreasuryButton/TreasuryButton'
 
 const navigation = [
-  { href: '/ecosystem', name: 'GBC Hub', url: ecosystemIcon },
-  { href: '/dao', name: 'Dao', url: daoIcon },
-  { href: Constants.URL.GBC_FORUM, name: 'Forum', url: forumIcom },
+  { href: '/ecosystem', name: 'Ecosystem', url: ecosystemIcon },
+  { href: Constants.URL.GBC_DAO, name: 'Dao', url: daoIcon },
   { href: Constants.URL.GBC_DOC, name: 'Docs', url: docsIcon },
   {
     href: '/blog',
@@ -60,13 +59,15 @@ type LaunchAppProps = {
 }
 
 const LaunchApp = ({ className }: LaunchAppProps) => {
+  const { LL } = useI18nContext()
+
   return (
     <Button
       btnType={ButtonType.Primary}
       className={className}
       url={Constants.URL.GBC_APP}
     >
-      Launch app
+      {LL.SHARED.JOIN_CLUB()}
     </Button>
   )
 }
@@ -76,7 +77,6 @@ export function SecondaryNavbar() {
     <div className="md:flex md:mr-12 items-center hidden space-x-3">
       <TreasuryButton></TreasuryButton>
       <LaunchApp />
-      <LightToggle />
     </div>
   )
 }
@@ -97,9 +97,6 @@ function MobileMenuButton({ onClick, isMenuOpen }: MobileMenuButtonProps) {
 
   return (
     <div className="md:hidden flex items-center">
-      <div>
-        <LightToggle />
-      </div>
       <div className="md:ml-auto ml-3">
         <TreasuryButton></TreasuryButton>
       </div>
@@ -144,7 +141,7 @@ function MobileMenu({ isOpen }: MobileMenuProps) {
             className="btn-primary text-primary-content"
             name={'LaunchApp'}
           >
-            Launch App
+            Enter World
           </NavItem>
         </div>
       </div>
