@@ -110,8 +110,8 @@ export const TeamMembers: TeamMemberProps[] = [
   {
     id: 6,
     img: 'cowchain',
-    jobs: [JobType.Dev],
-    name: 'Dev team',
+    jobs: [JobType.DevTeam],
+    name: 'Cowchain',
     socialLink: 'https://cowchain.io/',
   },
   {

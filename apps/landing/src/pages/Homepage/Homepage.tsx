@@ -3,7 +3,6 @@ import React from 'react'
 import useDocumentTitle from '../../hooks/useDocumentTitle'
 import { useI18nContext } from '../../i18n/i18n-react'
 
-import Apps from './Apps'
 import BerriesSlider from './BerriesSlider'
 import CommunityProposal from './CommunityProposal'
 import CommunityTreasury from './CommunityTreasury'
@@ -23,7 +22,6 @@ const Homepage: React.FC = () => {
         <Introduction />
         <EcosystemProducts />
         <CommunityTreasury />
-        <Apps />
         <CommunityProposal />
         <News />
         <Team />

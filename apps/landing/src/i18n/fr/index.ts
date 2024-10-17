@@ -73,7 +73,7 @@ const fr: Translation = {
     VALUE: '',
   },
   TEAM: {
-    JOB: '{job|{*: Team Member, cofounder: Co-Founder, ceo: CEO, advisor: Advisor, dev: Developer, coo: COO, cmo: CMO, cm: Community Manager, gmx: GMX Founder, gif: Gif Maker, cw: Copywriter, analyst: Analyst}}',
+    JOB: '{job|{*: Team Member, cofounder: Co-Founder, ceo: CEO, advisor: Advisor, dev: Developer, coo: COO, cmo: CMO, cm: Community Manager, gmx: GMX Founder, gif: Gif Maker, cw: Copywriter, analyst: Analyst, devteam: Dev Team}}',
     TEXT: '',
     TITLE: '',
   },

@@ -20,4 +20,5 @@ export enum JobType {
   GMX = 'gmx',
   Copywriter = 'cw',
   Analyst = 'analyst',
+  DevTeam = 'devteam',
 }

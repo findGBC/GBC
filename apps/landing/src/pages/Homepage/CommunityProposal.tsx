@@ -17,6 +17,13 @@ const CommunityProposal: React.FC = () => {
     <section>
       <Animate>
         <div className="md:px-40 flex flex-wrap">
+          <div className={`${colClassNames}`}>
+            <img
+              className="rounded-2xl w-full"
+              src={communityled}
+              alt="Community Treasury"
+            />
+          </div>
           <div className={`${colClassNames} grid content-center`}>
             <Title value={LL.COMMUNITY.TITLE()}></Title>
             <div className="space-y-4">
@@ -29,13 +36,7 @@ const CommunityProposal: React.FC = () => {
               </Button>
             </div>
           </div>
-          <div className={`${colClassNames}`}>
-            <img
-              className="rounded-2xl w-full"
-              src={communityled}
-              alt="Community Treasury"
-            />
-          </div>
+
         </div>
       </Animate>
     </section>
