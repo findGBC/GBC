@@ -161,10 +161,10 @@ export const SignerMembers: TeamMemberProps[] = [
   },
   {
     id: 6,
-    img: 'monte',
-    jobs: [JobType.CM],
-    name: 'Monte',
-    socialLink: 'https://twitter.com/monte_xyz',
+    img: 'vee',
+    jobs: [JobType.CMO],
+    name: 'Vee',
+    socialLink: 'https://twitter.com/vee_GBC',
   },
   {
     id: 7,
