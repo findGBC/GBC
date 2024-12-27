@@ -1,5 +1,5 @@
 import type { ClientOptions, OperationContext, TypedDocumentNode } from '@urql/core'
-import { createClient, gql, cacheExchange, fetchExchange } from '@urql/core'
+import { cacheExchange, createClient, fetchExchange, gql } from '@urql/core'
 
 import { fromJson, type IRequestPageApi, type ITrade } from '../gmx-middleware'
 import { fetchHistoricTrades, subgraphChainMap } from '../gmx-middleware/graph'
@@ -31,7 +31,7 @@ export const blueberrySubgraph = (v2: boolean = false) =>
     fetch: fetch,
     url: v2
       ? 'https://api.studio.thegraph.com/proxy/67817/findgbc/v0.0.3'
-      : 'https://api.thegraph.com/subgraphs/name/nissoh/blueberry-club-arbitrum',
+      : 'https://api.studio.thegraph.com/query/52799/lab-subgraph/version/latest',
   })
 
 export async function querySubgraph(document: string, v2: boolean): Promise<any> {
