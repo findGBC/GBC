@@ -25,13 +25,14 @@ export const createSubgraphClient = (opts: ClientOptions) => {
   }
 }
 
-export const blueberrySubgraph = (v2: boolean = false) =>
+const GOLDSKY_URL =
+  'https://api.goldsky.com/api/public/project_cmp2bnchdwx3901w4c62xepds/subgraphs/gbc-hub/1.0.0/gn'
+
+export const blueberrySubgraph = (_v2: boolean = false) =>
   createSubgraphClient({
     exchanges: [cacheExchange, fetchExchange],
     fetch: fetch,
-    url: v2
-      ? 'https://api.studio.thegraph.com/proxy/67817/findgbc/v0.0.3'
-      : 'https://api.thegraph.com/subgraphs/name/nissoh/blueberry-club-arbitrum',
+    url: GOLDSKY_URL,
   })
 
 export async function querySubgraph(document: string, v2: boolean): Promise<any> {
